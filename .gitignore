@@ -1,0 +1,6 @@
+node_modules/
+.env
+dist/
+.DS_Store
+scratch_fix_chapters.py
+scratch_rewrite.py

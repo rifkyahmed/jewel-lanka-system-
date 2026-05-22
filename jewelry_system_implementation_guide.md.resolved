@@ -1,0 +1,205 @@
+# 💎 Digital Jewelry Management & Analytics System (JMS)
+
+Yes! This is an **excellent and highly suitable idea** for your Decision Analytics assignment. It scores highly on academic requirements because:
+* **Real-world context:** Building a system for a real business (your father's shop) shows practical problem-solving.
+* **Perfect NoSQL use case:** Jewelry is highly unstructured. A plain gold ring has very different attributes from a diamond-studded platinum necklace. In SQL, this requires complex tables with many NULL columns. In MongoDB, it is easily handled using a flexible document structure.
+* **Rich Decision Analytics:** You can build analytics that directly help a shop owner make business decisions—such as identifying capital tied up in "dead stock," estimating custom orders dynamically, and tracking monthly profitability.
+
+---
+
+## 🎯 1. Core Features & Functionalities
+
+Here is the complete feature map designed to digitalize your father's jewelry ledger and apply decision analytics.
+
+### A. Gold Rate & Pricing Engine
+* **Manual Gold Price Setting:** A simple interface to update the daily price of gold per gram for different karats (e.g., 24K, 22K, 18K).
+* **Dynamic Valuation Engine:** 
+  * The system automatically calculates the selling price of items in inventory using the formula:
+    $$\text{Item Price} = (\text{Metal Weight} \times \text{Current Gold Rate per gram}) + \text{Gemstone Values} + \text{Making Charges}$$
+  * When the gold price is updated, the estimated showcase value of all unsold inventory updates instantly.
+
+### B. Product Inventory Management (Flexible Catalog)
+* **Standard Gold Items:** Log weight, gold purity (karat), and making charges (labor costs).
+* **Gem-Studded Items:** Log gold details plus an embedded list of gemstones. Each gem records type (Diamond, Ruby, Sapphire, etc.), carats, cut, clarity, and cost.
+* **Flexible Specifications:** Store unique characteristics (like chain link style, certificate numbers, or ring sizes) using flexible key-value maps.
+
+### C. Manual Order & Sales Logger
+* **Manual Sale Entry:** A simple screen for your father or sales staff to log a sale when a customer buys something:
+  * Select inventory items (or input custom details).
+  * Record customer name and contact (optional).
+  * Save the gold rate at the exact moment of sale (so historical reports aren't distorted when rates change tomorrow).
+  * Select payment method (Cash, Card, Gold Exchange).
+* **Gold Exchange Handling:** If a customer brings old gold jewelry to trade in, allow logging the exchange weight and rate, deducting it from the order total.
+
+### D. Decision Analytics Dashboard
+These features directly address the "Decision Analytics" requirements of the grading criteria:
+1. **📉 Dead Stock Analysis (Aging Inventory):**
+   * Tracks how many days each item has been sitting in the display case.
+   * Highlights items that haven't sold for over 180 or 365 days.
+   * *Strategic Decision:* Tells the owner which designs are unpopular, enabling them to melt them down to reuse the gold or run a discount promotion.
+2. **📈 Monthly Income & Financial Summary:**
+   * Summarizes monthly revenue, total cost of goods, total making charge earnings, and net profit margins.
+   * Tracks payment methods (e.g., Cash vs. Card vs. Old Gold trade-ins) to manage cash flow.
+3. **🔥 Inventory Velocity (Moving Items):**
+   * Ranks categories (Rings, Necklaces, Bangles, Earrings) by sales volume and speed.
+   * *Strategic Decision:* Guides the owner on what items to manufacture or buy more of.
+4. **🎛️ Custom Order Cost Estimator:**
+   * An interactive slider-based calculator. If a customer wants a custom item (e.g., a 22K gold necklace weighing 12 grams with a 0.5-carat diamond), the sales rep can slide the inputs to generate an instant cost estimate and suggest a retail price that guarantees a safe profit margin.
+
+---
+
+## 🗄️ 2. NoSQL Database Schema Design (MongoDB)
+
+Here is how the data structures are designed to reflect clean document-modeling practices:
+
+### 1. `gold_rates` Collection
+Stores the current prices of gold. Keeping this in a separate document makes it easy to read and update daily.
+```json
+{
+  "_id": "current_gold_rates",
+  "rates": {
+    "gold_24k_per_gram": 9500,
+    "gold_22k_per_gram": 8700,
+    "gold_18k_per_gram": 7125
+  },
+  "lastUpdated": "2026-05-19T14:10:00Z"
+}
+```
+
+### 2. `inventory` Collection
+Demonstrates flexible schemas and embedded subdocuments (gems).
+```json
+{
+  "_id": "ObjectId('...')",
+  "sku": "RNG-DIA-092",
+  "name": "Classic Solitaire Diamond Ring",
+  "category": "Ring",
+  "metalType": "gold_22k",
+  "metalWeightGrams": 4.8,
+  "makingCharge": 12000,
+  
+  "gemstones": [
+    {
+      "gemType": "Diamond",
+      "carats": 0.35,
+      "cut": "Brilliant",
+      "clarity": "VVS1",
+      "cost": 45000
+    }
+  ],
+  
+  "status": "In_Showcase", // "In_Showcase", "Sold", "Melted"
+  "enteredStockDate": "2026-01-10T12:00:00Z",
+  "specifications": {
+    "ringSize": "14",
+    "certificateNo": "GIA-88930"
+  }
+}
+```
+
+### 3. `orders` Collection
+Records manual transactions. Denormalizes item details so historical sales records remain static even if the product catalog or daily gold rates change.
+```json
+{
+  "_id": "ObjectId('...')",
+  "invoiceNumber": "INV-2026-0042",
+  "saleDate": "2026-05-19T19:40:00Z",
+  "customerName": "Kamal Perera",
+  "customerPhone": "0771234567",
+  
+  "items": [
+    {
+      "sku": "RNG-DIA-092",
+      "name": "Classic Solitaire Diamond Ring",
+      "metalWeightGrams": 4.8,
+      "goldRateApplied": 8700, 
+      "makingChargeApplied": 12000,
+      "gemstoneValueApplied": 45000,
+      "itemTotal": 98760
+    }
+  ],
+  
+  "goldExchange": {
+    "exchangedWeightGrams": 2.5,
+    "exchangedRatePerGram": 8000,
+    "discountValue": 20000
+  },
+  
+  "paymentMethod": "Cash", // Cash, Card, Hybrid
+  "subtotal": 98760,
+  "discount": 20000,
+  "finalAmountPaid": 78760
+}
+```
+
+---
+
+## 📈 3. Decision Analytics Queries (To Show Your Examiner)
+
+To secure a Grade A, you need to show complex aggregation pipelines. Here is how you can write the queries for your dashboard:
+
+### A. Identifying "Dead Stock" (Aging Items)
+Find items that have been in stock for over 180 days and calculate the cash tied up in them:
+```javascript
+db.inventory.aggregate([
+  { $match: { status: "In_Showcase" } },
+  {
+    $addFields: {
+      daysInStock: {
+        $round: {
+          $divide: [
+            { $subtract: [ new Date(), "$enteredStockDate" ] },
+            1000 * 60 * 60 * 24
+          ]
+        }
+      }
+    }
+  },
+  { $match: { daysInStock: { $gte: 180 } } },
+  { $sort: { daysInStock: -1 } }
+])
+```
+
+### B. Calculating Monthly Profitability
+Group sales orders by month, calculate total revenue, total cost of gold, and net profit:
+```javascript
+db.orders.aggregate([
+  {
+    $group: {
+      _id: { $dateToString: { format: "%Y-%m", date: "$saleDate" } },
+      totalSales: { $sum: "$finalAmountPaid" },
+      totalOrders: { $sum: 1 },
+      totalGoldExchanged: { $sum: "$goldExchange.discountValue" }
+    }
+  },
+  { $sort: { "_id": -1 } }
+])
+```
+
+---
+
+## 🚀 4. Step-by-Step Implementation Roadmap
+
+When you are ready to build, follow these stages:
+
+```mermaid
+graph TD
+    A[Stage 1: Setup Backend & DB] --> B[Stage 2: Daily Rate & CRUD Inventory]
+    B --> C[Stage 3: Manual Sales Logger]
+    C --> D[Stage 4: Analytics Dashboards]
+    D --> E[Stage 5: Testing & Viva Prep]
+```
+
+1. **Stage 1: Base Setup**
+   * Initialize a Node.js/Express backend and a React frontend.
+   * Set up MongoDB and establish Mongoose models for Rates, Inventory, and Orders.
+2. **Stage 2: Gold Rates & Inventory Management**
+   * Build the UI panel to update daily gold prices.
+   * Build forms to manually add new stock (with toggleable gemstone inputs).
+3. **Stage 3: Sales Logging**
+   * Build a checkout cart system. Include inputs for customer details, old gold trade-in credits, and payment methods.
+4. **Stage 4: Analytics Dashboard**
+   * Implement visual charts using Chart.js or Recharts fed by MongoDB Aggregation API endpoints.
+   * Create the interactive "Custom Order Estimate" slider.
+5. **Stage 5: Academic Report Writing**
+   * Document the database schema, write the SQL vs NoSQL comparison, and review Viva questions.

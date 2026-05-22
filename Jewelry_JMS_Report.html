@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Analytics 2 - Jewel Lanka Management System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            color: #000;
+            word-wrap: break-word;
+            font-size: 12pt;
+        }
+        .page {
+            width: 80%;
+            margin: auto;
+            padding: 60px 40px;
+            page-break-after: always;
+            overflow: hidden;
+        }
+        h1, h2, h3, h4 {
+            color: #333;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            font-size: 2em;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-top: 40px;
+        }
+        h3 {
+            font-size: 1.2em;
+            margin-top: 30px;
+        }
+        p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .cover-page {
+            text-align: center;
+            margin-top: 25vh;
+        }
+        .cover-page h1 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            border: none;
+        }
+        .cover-page h2 {
+            font-size: 1.8em;
+            font-weight: normal;
+            margin-bottom: 60px;
+            margin-top: 0;
+        }
+        .cover-page p {
+            font-size: 1.3em;
+            margin: 15px 0;
+        }
+        .toc-list {
+            list-style-type: none;
+            padding-left: 0;
+            line-height: 2;
+        }
+        .toc-list li {
+            margin: 10px 0;
+        }
+        .toc-list a {
+            text-decoration: none;
+            color: #000;
+        }
+        .toc-indent {
+            padding-left: 30px;
+        }
+        .toc-indent-2 {
+            padding-left: 60px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            table-layout: fixed;
+            word-wrap: break-word;
+        }
+        table, th, td {
+            border: 1px solid #000;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            font-family: monospace;
+            word-wrap: break-word;
+            font-size: 0.95em;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 20px;
+            overflow-x: auto;
+            white-space: pre-wrap;       /* css-3 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+            border-left: 5px solid #333;
+            font-size: 0.95em;
+            line-height: 1.4;
+            margin-bottom: 30px;
+        }
+        .screenshot-placeholder {
+            display: block;
+            width: 100%;
+            padding: 100px 20px;
+            margin: 40px auto;
+            background-color: #f9f9f9;
+            border: 3px dashed #777;
+            text-align: center;
+            font-weight: bold;
+            color: #555;
+            font-size: 1.2em;
+        }
+        .explanation {
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+        .citation {
+            font-style: italic;
+        }
+        @media print {
+            body {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            .page {
+                width: 100%;
+                margin: 0;
+                padding: 25mm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cover Page -->
+    <div class="page cover-page">
+        <h2>Individual Assignment</h2>
+        <h1>Decision Analytics-Driven Jewelry Business Management System</h1>
+        <br><br>
+        <h2>Jewel Lanka</h2>
+        <br><br>
+        <p><strong>Module:</strong> Decision Analytics 2</p>
+        <p><strong>Student ID:</strong> [Your Student ID Here]</p>
+        <p><strong>Name:</strong> [Your Name Here]</p>
+        <p><strong>Batch Code:</strong> [Your Batch Code Here]</p>
+        <br><br>
+        <p><strong>Hand In Date:</strong> [Submission Date Here]</p>
+        <p><strong>Weightage:</strong> 50%</p>
+    </div>
+
+    <!-- Acknowledgment -->
+    <div class="page">
+        <h1>Acknowledgment</h1>
+        <p>I would like to extend my deepest appreciation to the module lecturer for Decision Analytics. Their comprehensive teaching, continuous guidance, and constructive feedback were indispensable in helping me navigate the complexities of data pipelines and MongoDB integration.</p>
+        <p>A special note of thanks goes to the management of Jewel Lanka, who generously provided authentic business scenarios, shared insights into the daily struggles of manual jewelry accounting, and allowed me to design a system tailored to their specific operational challenges.</p>
+        <p>I am also incredibly grateful to the university for providing access to essential academic resources and a conducive learning environment. Finally, I wish to thank my family and peers for their continuous motivation and encouragement throughout the challenging phases of developing and testing this full-stack application.</p>
+    </div>
+
+    <!-- Abstract -->
+    <div class="page">
+        <h1>Abstract</h1>
+        <p>Keeping a traditional jewelry store running smoothly is surprisingly difficult in the digital age. This assignment breaks down the design and development of a custom Decision Analytics Management System I built for Jewel Lanka. For years, the store ran entirely on paper. From tracking expensive 22k gold inventory to calculating volatile daily gold prices on pocket calculators, the physical friction was holding them back. As Johnson (2020) points out, relying on guesswork instead of data is a quick way to lose margins in high-value retail.</p>
+        <p>To fix these issues, I engineered a full-stack web application using the MERN stack (MongoDB, Express, React, Node.js). Why MongoDB? A single piece of jewelry—like a necklace—can have dozens of unique gemstones of varying carats. Trying to force that unstructured data into a rigid SQL table didn't make sense. MongoDB handles these nested attributes effortlessly. But the real value isn't just in replacing paper. By building custom Aggregation Pipelines, Jewel Lanka can now look at a dashboard and instantly see which items sell the fastest, who their top VIPs are, and exactly where their revenue is coming from. Furthermore, I integrated NVIDIA's Llama-3.3 AI directly into the system, adding cutting-edge features like AI market prediction and automated repair estimates. Ultimately, this report shows how moving from a messy physical ledger to a smart, data-driven web app completely changes how a traditional business operates.</p>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="page">
+        <h1>Contents</h1>
+        <ul class="toc-list">
+            <li><a href="#ack">Acknowledgment</a></li>
+            <li><a href="#abstract">Abstract</a></li>
+            <li><a href="#ch1">1. Introduction</a>
+                <ul class="toc-list toc-indent">
+                    <li><a href="#ch1-1">1.1 Retail Context of Jewel Lanka</a></li>
+                    <li><a href="#ch1-2">1.2 Competitive Stance</a></li>
+                    <li><a href="#ch1-3">1.3 Operational Challenges</a>
+                        <ul class="toc-list toc-indent-2">
+                            <li><a href="#ch1-3-1">1.3.1 Manual Ledger Discrepancies</a></li>
+                            <li><a href="#ch1-3-2">1.3.2 Gold Pricing Volatility</a></li>
+                            <li><a href="#ch1-3-3">1.3.3 Absence of VIP CRM</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#ch1-4">1.4 Core Analytical Objectives</a></li>
+                    <li><a href="#ch1-5">1.5 Connecting the Analytics Architecture</a></li>
+                    <li><a href="#ch1-6">1.6 Overview of the Report</a></li>
+                    <li><a href="#ch1-7">1.7 Objectives of the Study</a></li>
+                    <li><a href="#ch1-8">1.8 Importance of Data Analytics</a></li>
+                </ul>
+            </li>
+            <li><a href="#ch2">2. Data Infrastructure and Pipelines</a>
+                <ul class="toc-list toc-indent">
+                    <li><a href="#ch2-1">2.1 Understanding Data Workflows</a>
+                        <ul class="toc-list toc-indent-2">
+                            <li><a href="#ch2-1-1">2.1.1 Mechanics of the Data Flow</a></li>
+                            <li><a href="#ch2-1-2">2.1.2 Business Value of Automation</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#ch2-2">2.2 Database</a>
+                        <ul class="toc-list toc-indent-2">
+                            <li><a href="#ch2-2-1">2.2.1 Relational Databases</a></li>
+                            <li><a href="#ch2-2-2">2.2.2 NoSQL Databases</a></li>
+                            <li><a href="#ch2-2-3">2.2.3 Relational Database vs NoSQL Databases</a></li>
+                            <li><a href="#ch2-2-4">2.2.4 Importance of MongoDB for this project</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="#ch3">3. Understanding Database Models and Technologies</a>
+                <ul class="toc-list toc-indent">
+                    <li><a href="#ch3-1">3.1 The Role of Databases in Business Analytics</a></li>
+                    <li><a href="#ch3-2">3.2 Comparative Analysis: SQL vs NoSQL</a></li>
+                    <li><a href="#ch3-3">3.3 Use Case-Based Comparison</a></li>
+                    <li><a href="#ch3-4">3.4 Database Tool Categorization</a></li>
+                    <li><a href="#ch3-5">3.5 Why NoSQL Was Chosen for This Project</a></li>
+                    <li><a href="#ch3-6">3.6 Evolution and Relevance of MongoDB</a></li>
+                </ul>
+            </li>
+            <li><a href="#ch4">4. MongoDB</a>
+                <ul class="toc-list toc-indent">
+                    <li><a href="#ch4-1">4.1 History of MongoDB</a></li>
+                    <li><a href="#ch4-2">4.2 Benefits of MongoDB</a></li>
+                    <li><a href="#ch4-3">4.3 Limitations of MongoDB</a></li>
+                </ul>
+            </li>
+            <li><a href="#ch5">5. MongoDB Database Design and Development</a>
+                <ul class="toc-list toc-indent">
+                    <li><a href="#ch5-1">5.1 Database Design</a></li>
+                    <li><a href="#ch5-2">5.2 Data Model Diagram</a>
+                        <ul class="toc-list toc-indent-2">
+                            <li><a href="#ch5-2-1">5.2.1 How the Data Model Supports the Business Goals</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#ch5-3">5.3 Database Collection Design</a>
+                        <ul class="toc-list toc-indent-2">
+                            <li><a href="#ch5-3-1">5.3.1 Customers</a></li>
+                            <li><a href="#ch5-3-2">5.3.2 Orders</a></li>
+                            <li><a href="#ch5-3-3">5.3.3 Employees</a></li>
+                            <li><a href="#ch5-3-4">5.3.4 Products</a></li>
+                            <li><a href="#ch5-3-5">5.3.5 Promotions</a></li>
+                            <li><a href="#ch5-3-6">5.3.6 Admin</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#ch5-4">5.4 MongoDB creation using MongoDB Shell</a></li>
+                    <li><a href="#ch5-5">5.5 MongoDB Compass</a>
+                        <ul class="toc-list toc-indent-2">
+                            <li><a href="#ch5-5-1">5.5.1 Database Development in MongoDB</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="#ch6">6. MERN Stack Development</a>
+                <ul class="toc-list toc-indent">
+                    <li><a href="#ch6-1">6.1 Overview</a>
+                        <ul class="toc-list toc-indent-2">
+                            <li><a href="#ch6-1-1">6.1.1 How the MERN Stack Works</a></li>
+                            <li><a href="#ch6-1-2">6.1.2 Advantages of MERN Stack</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#ch6-2">6.2 System Architecture & Implementation Details</a></li>
+                    <li><a href="#ch6-3">6.3 Jewel Lanka Dashboard System</a>
+                        <ul class="toc-list toc-indent-2">
+                            <li><a href="#ch6-3-1">6.3.1 Interfaces</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#ch6-4">6.4 Advanced AI Integrations (NVIDIA API)</a>
+                        <ul class="toc-list toc-indent-2">
+                            <li><a href="#ch6-4-1">6.4.1 Global Market Trend Predictor</a></li>
+                            <li><a href="#ch6-4-2">6.4.2 VIP Profiling & Automated Marketing</a></li>
+                            <li><a href="#ch6-4-3">6.4.3 AI Repair Cost Estimator</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="#ch7">7. Data Analysis and Insights</a>
+                <ul class="toc-list toc-indent">
+                    <li><a href="#ch7-1">7.1 Relevance to Jewel Lanka</a></li>
+                    <li><a href="#ch7-2">7.2 Solving the Business Problem</a></li>
+                    <li><a href="#ch7-3">7.3 Key Questions and Queries</a></li>
+                    <li><a href="#ch7-4">7.4 Hypothesis Testing & Verification</a></li>
+                </ul>
+            </li>
+            <li><a href="#ch8">8. Conclusion</a></li>
+            <li><a href="#bib">Bibliography</a></li>
+        </ul>
+    </div>
+<!-- Chapter 1 -->
+    <div class="page" id="ch1">
+        <h1>1 Introduction</h1>
+        
+        <h2 id="ch1-1">1.1 Retail Context of Jewel Lanka</h2>
+        <p>Jewel Lanka is a premier jewelry retailer specializing in gold, precious gemstones, and bespoke custom repairs. Operating for years in a competitive sector, the store has cultivated a dedicated local following built on trust and authenticity. Historically, however, the day-to-day operations have been governed entirely by physical, paper-based processes. The reliance on manual books to track highly volatile assets like 22k gold, combined with the lack of digital customer records, has severely limited the store's capacity to scale operations. In modern retail environments, transitioning away from analog systems is crucial for sustaining long-term business health (Banker & Kauffman, 2018).</p>
+
+        <h2 id="ch1-2">1.2 Competitive Stance</h2>
+        <p>Jewel Lanka currently occupies a strong position as a trusted vendor for weddings, heirloom repairs, and gold investments. Despite this strong reputation, the lack of a digital footprint and real-time inventory tracking places the business at a disadvantage compared to highly modernized corporate jewelry franchises. By adopting an advanced analytics dashboard, Jewel Lanka will solidify its market position by offering faster checkouts, dynamic pricing, and data-backed loyalty rewards that cater to the expectations of a modernized consumer base.</p>
+
+        <h2 id="ch1-3">1.3 Operational Challenges</h2>
+        <p>The core business friction stems from three primary areas of operational inefficiency:</p>
+        
+        <h3 id="ch1-3-1">1.3.1 Manual Ledger Discrepancies</h3>
+        <p>The reliance on multiple physical ledgers—one for daily cash flow, one for inventory, and another for customer repairs—creates data silos. Because information is not centralized, it is impossible to quickly retrieve a complete overview of the business. For example, verifying a customer's past purchases requires manually skimming through months of handwritten receipts, a process that is highly susceptible to human error and data loss.</p>
+
+        <h3 id="ch1-3-2">1.3.2 Gold Pricing Volatility</h3>
+        <p>Unlike standard retail, jewelry pricing is exceptionally volatile. It is tied to the daily global rate of gold. Currently, Jewel Lanka staff must utilize calculators at the checkout counter, multiplying the daily rate by the item's weight in grams, and then manually adding the making charges. This manual pricing workflow is inherently dangerous; a single mathematical error by a cashier could result in thousands of rupees in lost revenue on a single transaction.</p>
+
+        <h3 id="ch1-3-3">1.3.3 Absence of VIP CRM</h3>
+        <p>High-value retail depends heavily on repeat VIP customers (Johnson, 2020). Jewel Lanka lacks a systematic way to track customer lifetime value. Loyalty discounts are presently awarded based on the subjective memory of senior staff. This arbitrary method prevents the business from implementing targeted, data-driven marketing campaigns to re-engage past clients.</p>
+    </div>
+
+    <!-- Chapter 1 (Cont'd) -->
+    <div class="page">
+        <h2 id="ch1-4">1.4 Core Analytical Objectives</h2>
+        <p>To build a valuable analytics system, the database must be structured to answer the following specific queries:</p>
+        <p><strong>Q1: What are the highest-velocity products in terms of sales volume?</strong><br>
+        <em>Answer:</em> Knowing exactly which SKUs (e.g., lightweight 18k chains vs 22k bridal rings) move the fastest allows management to optimize procurement and avoid dead stock.</p>
+        <p><strong>Q2: Which customers hold the highest accumulation of loyalty points?</strong><br>
+        <em>Answer:</em> Distinguishing VIP clients allows the business to offer personalized incentives, driving retention in a sector where single purchases carry massive margins.</p>
+        <p><strong>Q3: How are revenues distributed across different product categories?</strong><br>
+        <em>Answer:</em> Understanding whether rings, necklaces, or loose gems generate the highest gross profit helps focus marketing efforts.</p>
+        <p><strong>Q4: What is the impact of accepting old gold exchanges on total order values?</strong><br>
+        <em>Answer:</em> Determining if customers spend more overall when they can trade in old gold justifies the continuation of exchange programs.</p>
+
+        <h2 id="ch1-5">1.5 Connecting the Analytics Architecture</h2>
+        <p>A data engineering pipeline is required to systematically extract data from the checkout counter, transform it securely, and load it into an analytical database (Inmon, 2019). For Jewel Lanka, the flow is as follows:</p>
+        <ul>
+            <li><strong>Data Ingestion:</strong> Staff interact with the React frontend. Transactions, including item SKUs and live gold rates, are submitted via secure HTTP requests.</li>
+            <li><strong>Transformation:</strong> The Express.js backend acts as the middleware. It verifies the payload, ensuring stock levels are sufficient, calculates the final price, and structures the data into a valid JSON object.</li>
+            <li><strong>Storage:</strong> The structured JSON is written to the NoSQL MongoDB database, appending new orders while atomically decrementing stock levels in the products collection.</li>
+            <li><strong>Analysis & Visualization:</strong> Scheduled and real-time MongoDB aggregation queries extract this raw data, calculate averages and sums, and pipe the results back to the React dashboard charts.</li>
+        </ul>
+
+        <h2 id="ch1-6">1.6 Overview of the Report</h2>
+        <p>This report comprehensively documents the transition of Jewel Lanka from a traditional, paper-based jewelry retailer to a modernized, data-driven enterprise. It begins by dissecting the operational friction in the current setup, particularly focusing on how volatile gold prices and lack of CRM hurt profitability. Subsequent chapters will walk through the data engineering required to fix this, introducing the concepts of NoSQL databases, the specific MERN stack architecture implemented, and ultimately showcasing how the aggregation of this data unlocks powerful business intelligence and AI-driven market predictions.</p>
+
+        <h2 id="ch1-7">1.7 Objectives of the Study</h2>
+        <p>The primary objective is to design, develop, and deploy a bespoke Decision Analytics Management System. Secondary objectives include:</p>
+        <ul>
+            <li>Eliminating mathematical errors at the checkout counter by dynamically linking live gold rates to inventory weights.</li>
+            <li>Establishing a centralized NoSQL repository to replace fragmented paper ledgers.</li>
+            <li>Providing management with a real-time analytics dashboard to identify top-selling items and VIP customers.</li>
+            <li>Integrating advanced AI capabilities (via NVIDIA Llama-3.3) to provide automated business consultation, marketing generation, and market forecasting.</li>
+        </ul>
+
+        <h2 id="ch1-8">1.8 Importance of Data Analytics to the Problem</h2>
+        <p>In the luxury jewelry sector, margins are tight and inventory is extremely high-value. Without data analytics, decision-making is purely reactive and based on subjective memory. By applying analytics to the problem, Jewel Lanka can proactively identify which inventory to procure (e.g., heavily investing in 22k gold if data proves it moves faster), optimize their loyalty programs, and use predictive AI models to time their wholesale purchases perfectly. Analytics transforms the business from surviving day-to-day to strategically dominating the local market.</p>
+    </div>
+
+
+    <!-- Chapter 2 -->
+    <div class="page" id="ch2">
+        <h1>2 Data Infrastructure and Pipelines</h1>
+
+        <h2 id="ch2-1">2.1 Understanding Data Workflows</h2>
+        <p>In modern software architecture, a data pipeline represents the automated sequence of processes that extract data from its origin, clean and format it, and store it in a destination where it can be utilized for business intelligence. Without a defined pipeline, business data remains fragmented and practically useless for high-level decision-making (Inmon, 2019).</p>
+
+        <h3 id="ch2-1-1">2.1.1 Mechanics of the Data Flow</h3>
+        <p>The Jewel Lanka system was designed with a real-time transactional pipeline rather than a batch-processing pipeline. When a cashier completes an order on the React frontend, the payload is immediately serialized to JSON. The Node.js server intercepts this payload, performs critical validations (such as confirming the gold exchange weight is a positive integer), and then commits the record to MongoDB. Simultaneously, the server updates the `Customers` collection to increment loyalty points.</p>
+
+        <h3 id="ch2-1-2">2.1.2 Business Value of Automation</h3>
+        <p>By automating the pipeline, Jewel Lanka fundamentally changes its operational tempo:</p>
+        <ul>
+            <li><strong>Elimination of Human Error:</strong> Automated calculation of complex pricing (Weight × Rate + Making Charges) ensures 100% financial accuracy at checkout.</li>
+            <li><strong>Instantaneous Insights:</strong> Management does not have to wait until the end of the month to tally physical books; the dashboard reflects exact revenue up to the very last second.</li>
+            <li><strong>Audit Trails:</strong> Every transaction is digitally logged with timestamps, providing security against shrinkage or misplacement of expensive inventory.</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 2 (Cont'd) -->
+    <div class="page">
+        <h2 id="ch2-2">2.2 Database</h2>
+
+        <h3 id="ch2-2-1">2.2.1 Relational Databases</h3>
+        <p>Relational databases (RDBMS), such as PostgreSQL and MySQL, have been the industry standard for decades. They enforce a strict tabular structure, requiring data to fit perfectly into pre-defined rows and columns. While excellent for applications requiring strict ACID compliance (Atomicity, Consistency, Isolation, Durability), they struggle significantly when data schemas need to evolve rapidly or when dealing with deeply nested data hierarchies (Harrison, 2015).</p>
+
+        <h3 id="ch2-2-2">2.2.2 NoSQL Databases</h3>
+        <p>NoSQL databases were engineered to solve the scalability and flexibility issues of relational models. Rather than rigid tables, document-based NoSQL systems like MongoDB store data in flexible JSON-like formats. This allows for horizontal scaling (distributing the database across multiple physical servers) and the ability to embed related data—like a customer's multiple addresses—directly inside a single record.</p>
+
+        <h3 id="ch2-2-3">2.2.3 Relational Database vs NoSQL Databases</h3>
+        <table>
+            <tr>
+                <th>Attribute</th>
+                <th>SQL (Relational)</th>
+                <th>NoSQL (MongoDB)</th>
+            </tr>
+            <tr>
+                <td><strong>Structure</strong></td>
+                <td>Fixed schema; tables with rows and columns.</td>
+                <td>Dynamic schema; collections of BSON documents.</td>
+            </tr>
+            <tr>
+                <td><strong>Data Relationships</strong></td>
+                <td>Heavy reliance on Foreign Keys and slow JOIN operations.</td>
+                <td>Relies on embedding nested data or manual references.</td>
+            </tr>
+            <tr>
+                <td><strong>Scaling Method</strong></td>
+                <td>Vertical (Requires buying a larger, more expensive server).</td>
+                <td>Horizontal (Adds more cheap servers to form a cluster).</td>
+            </tr>
+            <tr>
+                <td><strong>Best Use Case</strong></td>
+                <td>Complex, multi-row financial banking systems.</td>
+                <td>Agile web apps, nested e-commerce catalogs, and rapid prototyping.</td>
+            </tr>
+        </table>
+
+        <h3 id="ch2-2-4">2.2.4 Importance of MongoDB for this project</h3>
+        <p>Jewelry is inherently unstructured data. A plain gold ring has a metal weight and purity. However, a bespoke bridal necklace might feature an array of 50 different gemstones, each with its own carat weight, color grade, and clarity rating. If Jewel Lanka used an SQL database, rendering a single product page would require querying a "Products" table, and running multiple complex JOINs across a "Gemstones" table and a "Certifications" table. With MongoDB, this entire entity is stored naturally as a single, embedded JSON document. This drastically reduces query latency, ensuring the Point of Sale system operates rapidly without freezing during checkout.</p>
+    </div>
+
+
+
+
+    <!-- Chapter 3 -->
+    <div class="page" id="ch3">
+        <h1>3 Understanding Database Models and Technologies</h1>
+
+        <h2 id="ch3-1">3.1 The Role of Databases in Business Analytics</h2>
+        <p>A database is not merely a digital filing cabinet; in the context of business analytics, it is the central nervous system of the enterprise. For Jewel Lanka, the database must not only store transactional data securely but also allow for rapid, complex mathematical aggregations on the fly. An intelligently modeled database ensures that when the owner requests a report on "Top 5 VIP Customers," the system does not freeze while scanning millions of records, but rather returns the insight in milliseconds.</p>
+
+        <h2 id="ch3-2">3.2 Comparative Analysis: SQL vs NoSQL</h2>
+        <p>Before selecting the technology stack, it is imperative to evaluate the two dominant database paradigms: Relational (SQL) and Non-Relational (NoSQL). SQL databases (like MySQL and PostgreSQL) enforce a rigid, tabular schema. Every row must strictly conform to predefined columns. This is excellent for banking systems where data shapes rarely change. NoSQL databases (like MongoDB), however, store data in flexible, document-based formats (like JSON). This allows for nested arrays and dynamic fields, which is incredibly useful for modern web applications that iterate rapidly.</p>
+
+        <h2 id="ch3-3">3.3 Use Case-Based Comparison</h2>
+        <p>If Jewel Lanka used an SQL database, representing a single bespoke necklace might require a `Products` table, joined to a `Gemstones` table, joined to a `LaborCosts` table. Retrieving this single item would require multiple expensive `JOIN` operations. Conversely, in a NoSQL document database, that entire necklace—with its array of diverse gemstones and specific labor costs—is stored as one single, easily retrievable document. For an e-commerce or point-of-sale catalog, NoSQL provides vastly superior read performance.</p>
+
+        <h2 id="ch3-4">3.4 Database Tool Categorization</h2>
+        <p>Databases can generally be categorized into four types based on their structural approach:</p>
+        <ul>
+            <li><strong>Relational (SQL):</strong> Best for structured, heavily related data (e.g., MySQL, Oracle).</li>
+            <li><strong>Document (NoSQL):</strong> Best for flexible, nested data and rapid development (e.g., MongoDB, CouchDB).</li>
+            <li><strong>Key-Value:</strong> Best for ultra-fast caching mechanisms (e.g., Redis, DynamoDB).</li>
+            <li><strong>Graph:</strong> Best for mapping highly interconnected relationship networks (e.g., Neo4j).</li>
+        </ul>
+
+        <h2 id="ch3-5">3.5 Why NoSQL Was Chosen for This Project</h2>
+        <p>NoSQL, specifically MongoDB, was selected for Jewel Lanka primarily due to its "Schema Flexibility". Jewelry is inherently unstructured—some items are pure gold, while others feature complex arrays of diamonds, rubies, and varying making charges. MongoDB allows the React frontend to pass complex, nested JavaScript objects directly to the database without requiring an ORM (Object-Relational Mapping) layer to flatten the data into rigid tables. This dramatically reduced development time and significantly optimized the analytical query speeds required for the dashboard.</p>
+
+        <h2 id="ch3-6">3.6 Evolution and Relevance of MongoDB in Modern Systems</h2>
+        <p>Since its inception, MongoDB has evolved from a simple document store into a robust, enterprise-grade platform capable of handling ACID transactions and massive horizontal scaling. In modern systems, particularly those utilizing the MERN stack, MongoDB is highly relevant because it natively speaks BSON (Binary JSON). This creates a seamless, unified data language from the React frontend, through the Node.js backend, all the way to the storage layer, completely eliminating the "impedance mismatch" that plagues traditional SQL architectures.</p>
+    </div>
+
+    <!-- Chapter 3 -->
+    <div class="page" id="ch4">
+        <h1>4 Understanding Database Models and Technologies</h1>
+
+        <h2 id="ch4-1">4.1 The Role of Databases in Business Analytics</h2>
+        <p>A database is not merely a digital filing cabinet; in the context of business analytics, it is the central nervous system of the enterprise. For Jewel Lanka, the database must not only store transactional data securely but also allow for rapid, complex mathematical aggregations on the fly. An intelligently modeled database ensures that when the owner requests a report on "Top 5 VIP Customers," the system does not freeze while scanning millions of records, but rather returns the insight in milliseconds.</p>
+
+        <h2 id="ch4-2">4.2 Comparative Analysis: SQL vs NoSQL</h2>
+        <p>Before selecting the technology stack, it is imperative to evaluate the two dominant database paradigms: Relational (SQL) and Non-Relational (NoSQL). SQL databases (like MySQL and PostgreSQL) enforce a rigid, tabular schema. Every row must strictly conform to predefined columns. This is excellent for banking systems where data shapes rarely change. NoSQL databases (like MongoDB), however, store data in flexible, document-based formats (like JSON). This allows for nested arrays and dynamic fields, which is incredibly useful for modern web applications that iterate rapidly.</p>
+
+        <h2 id="ch4-3">4.3 Use Case-Based Comparison</h2>
+        <p>If Jewel Lanka used an SQL database, representing a single bespoke necklace might require a `Products` table, joined to a `Gemstones` table, joined to a `LaborCosts` table. Retrieving this single item would require multiple expensive `JOIN` operations. Conversely, in a NoSQL document database, that entire necklace—with its array of diverse gemstones and specific labor costs—is stored as one single, easily retrievable document. For an e-commerce or point-of-sale catalog, NoSQL provides vastly superior read performance.</p>
+
+        <h2 id="ch4-4">4.4 Database Tool Categorization</h2>
+        <p>Databases can generally be categorized into four types based on their structural approach:</p>
+        <ul>
+            <li><strong>Relational (SQL):</strong> Best for structured, heavily related data (e.g., MySQL, Oracle).</li>
+            <li><strong>Document (NoSQL):</strong> Best for flexible, nested data and rapid development (e.g., MongoDB, CouchDB).</li>
+            <li><strong>Key-Value:</strong> Best for ultra-fast caching mechanisms (e.g., Redis, DynamoDB).</li>
+            <li><strong>Graph:</strong> Best for mapping highly interconnected relationship networks (e.g., Neo4j).</li>
+        </ul>
+
+        <h2 id="ch4-5">4.5 Why NoSQL Was Chosen for This Project</h2>
+        <p>NoSQL, specifically MongoDB, was selected for Jewel Lanka primarily due to its "Schema Flexibility". Jewelry is inherently unstructured—some items are pure gold, while others feature complex arrays of diamonds, rubies, and varying making charges. MongoDB allows the React frontend to pass complex, nested JavaScript objects directly to the database without requiring an ORM (Object-Relational Mapping) layer to flatten the data into rigid tables. This dramatically reduced development time and significantly optimized the analytical query speeds required for the dashboard.</p>
+
+        <h2 id="ch4-6">4.6 Evolution and Relevance of MongoDB in Modern Systems</h2>
+        <p>Since its inception, MongoDB has evolved from a simple document store into a robust, enterprise-grade platform capable of handling ACID transactions and massive horizontal scaling. In modern systems, particularly those utilizing the MERN stack, MongoDB is highly relevant because it natively speaks BSON (Binary JSON). This creates a seamless, unified data language from the React frontend, through the Node.js backend, all the way to the storage layer, completely eliminating the "impedance mismatch" that plagues traditional SQL architectures.</p>
+    </div>
+
+    <!-- Chapter 3 -->
+    <div class="page" id="ch3">
+        <h1>3 Understanding Database Models and Technologies</h1>
+
+        <h2 id="ch3-1">3.1 The Role of Databases in Business Analytics</h2>
+        <p>A database is not merely a digital filing cabinet; in the context of business analytics, it is the central nervous system of the enterprise. For Jewel Lanka, the database must not only store transactional data securely but also allow for rapid, complex mathematical aggregations on the fly. An intelligently modeled database ensures that when the owner requests a report on "Top 5 VIP Customers," the system does not freeze while scanning millions of records, but rather returns the insight in milliseconds.</p>
+
+        <h2 id="ch3-2">3.2 Comparative Analysis: SQL vs NoSQL</h2>
+        <p>Before selecting the technology stack, it is imperative to evaluate the two dominant database paradigms: Relational (SQL) and Non-Relational (NoSQL). SQL databases (like MySQL and PostgreSQL) enforce a rigid, tabular schema. Every row must strictly conform to predefined columns. This is excellent for banking systems where data shapes rarely change. NoSQL databases (like MongoDB), however, store data in flexible, document-based formats (like JSON). This allows for nested arrays and dynamic fields, which is incredibly useful for modern web applications that iterate rapidly.</p>
+
+        <h2 id="ch3-3">3.3 Use Case-Based Comparison</h2>
+        <p>If Jewel Lanka used an SQL database, representing a single bespoke necklace might require a `Products` table, joined to a `Gemstones` table, joined to a `LaborCosts` table. Retrieving this single item would require multiple expensive `JOIN` operations. Conversely, in a NoSQL document database, that entire necklace—with its array of diverse gemstones and specific labor costs—is stored as one single, easily retrievable document. For an e-commerce or point-of-sale catalog, NoSQL provides vastly superior read performance.</p>
+
+        <h2 id="ch3-4">3.4 Database Tool Categorization</h2>
+        <p>Databases can generally be categorized into four types based on their structural approach:</p>
+        <ul>
+            <li><strong>Relational (SQL):</strong> Best for structured, heavily related data (e.g., MySQL, Oracle).</li>
+            <li><strong>Document (NoSQL):</strong> Best for flexible, nested data and rapid development (e.g., MongoDB, CouchDB).</li>
+            <li><strong>Key-Value:</strong> Best for ultra-fast caching mechanisms (e.g., Redis, DynamoDB).</li>
+            <li><strong>Graph:</strong> Best for mapping highly interconnected relationship networks (e.g., Neo4j).</li>
+        </ul>
+
+        <h2 id="ch3-5">3.5 Why NoSQL Was Chosen for This Project</h2>
+        <p>NoSQL, specifically MongoDB, was selected for Jewel Lanka primarily due to its "Schema Flexibility". Jewelry is inherently unstructured—some items are pure gold, while others feature complex arrays of diamonds, rubies, and varying making charges. MongoDB allows the React frontend to pass complex, nested JavaScript objects directly to the database without requiring an ORM (Object-Relational Mapping) layer to flatten the data into rigid tables. This dramatically reduced development time and significantly optimized the analytical query speeds required for the dashboard.</p>
+
+        <h2 id="ch3-6">3.6 Evolution and Relevance of MongoDB in Modern Systems</h2>
+        <p>Since its inception, MongoDB has evolved from a simple document store into a robust, enterprise-grade platform capable of handling ACID transactions and massive horizontal scaling. In modern systems, particularly those utilizing the MERN stack, MongoDB is highly relevant because it natively speaks BSON (Binary JSON). This creates a seamless, unified data language from the React frontend, through the Node.js backend, all the way to the storage layer, completely eliminating the "impedance mismatch" that plagues traditional SQL architectures.</p>
+    </div>
+
+    <!-- Chapter 3 -->
+    <div class="page" id="ch4">
+        <h1>4 MongoDB</h1>
+        <p class="explanation">MongoDB serves as the foundational data layer for the Jewel Lanka architecture. It is a highly robust, document-oriented NoSQL database designed specifically to accommodate the agility required by modern web applications.</p>
+
+        <h2 id="ch4-1">4.1 History of MongoDB</h2>
+        <p class="explanation">MongoDB was developed in 2007 by 10gen (now MongoDB Inc.). The creators recognized that the rigid nature of relational databases was stifling innovation in web development, specifically because developers had to constantly translate object-oriented code into flat SQL tables (an issue known as object-relational impedance mismatch). By 2009, MongoDB was open-sourced, quickly becoming the database of choice for developers utilizing JavaScript across the entire stack. Today, it is utilized by enterprise giants globally to handle massive, unstructured datasets and real-time analytics (Copestake, 2022).</p>
+
+        <h2 id="ch4-2">4.2 Benefits of MongoDB</h2>
+        <p class="explanation">The selection of MongoDB for Jewel Lanka was driven by several distinct technical advantages:</p>
+        <ul>
+            <li><strong>BSON Document Model:</strong> Data is stored in Binary JSON (BSON). This means the database speaks the exact same language as the React frontend and the Express backend. Objects can be passed from the database to the browser without requiring heavy translation layers.</li>
+            <li><strong>Schema Flexibility:</strong> Unlike SQL, there are no rigid tables. If Jewel Lanka decides to start selling watches next year, fields like "battery type" or "strap material" can be added to new product documents immediately without causing errors in the older jewelry documents.</li>
+            <li><strong>The Aggregation Framework:</strong> This feature is critical for the analytics dashboard. The Aggregation Pipeline allows developers to process data and return computed results (like summing up total revenue) directly at the database level, preventing the Node.js server from being overwhelmed by massive data processing tasks (MongoDB Documentation, 2025).</li>
+            <li><strong>Horizontal Scalability:</strong> MongoDB scales out natively via a process called sharding, distributing the data across a cluster of machines. As Jewel Lanka's transaction history grows over the years, the database performance will not degrade.</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 3 (Cont'd) -->
+    <div class="page">
+        <h2 id="ch4-3">4.3 Limitations of MongoDB</h2>
+        <p class="explanation">While highly advantageous for this project, MongoDB's architecture carries specific trade-offs that developers must mitigate:</p>
+        <ul>
+            <li><strong>Eventual Consistency vs. ACID:</strong> Relational databases guarantee that a transaction is instantly consistent across the entire system. MongoDB, particularly in a distributed cluster, often relies on eventual consistency—meaning it may take a fraction of a second for data written to the primary node to propagate to secondary read nodes. While MongoDB 4.0+ supports ACID transactions, overusing them negates the performance benefits of NoSQL.</li>
+            <li><strong>Data Redundancy:</strong> Because MongoDB discourages heavy JOIN operations, developers often denormalize data. For instance, rather than simply linking a customer's ID to an order, the customer's name and phone number might be duplicated directly inside the order document itself. While this makes reading the order much faster, it consumes significantly more storage space.</li>
+            <li><strong>High Memory Usage:</strong> MongoDB is designed to keep active working data sets and all indexes in RAM to ensure lightning-fast read operations. Consequently, it requires significantly more RAM on the host server compared to a highly normalized relational database (Harrison, 2015).</li>
+            <li><strong>Complex Query Syntax:</strong> While simple CRUD operations are easy in MongoDB, constructing deeply nested Aggregation Pipelines requires a steep learning curve and precise knowledge of BSON operators, making it harder to debug than standard SQL `GROUP BY` statements.</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 4 -->
+    <div class="page" id="ch5">
+        <h1>5 MongoDB Database Design and Development</h1>
+        <p class="explanation">The core of the Jewel Lanka application relies on a carefully orchestrated NoSQL database schema. The primary goal of this design phase was to structure the data in a way that minimizes read times for the cashiers at the Point of Sale, while simultaneously allowing for robust analytical queries on the backend.</p>
+
+        <h2 id="ch3-1">5.1 Database Design Principles</h2>
+        <p class="explanation">The database was modeled around key business entities. We utilized the "embed vs reference" rule of thumb: data that is tightly coupled and frequently accessed together (like a product and its gemstones) is embedded. Data that exists independently and scales massively (like customers and their orders) is referenced.</p>
+        <ul>
+            <li><strong>Customers:</strong> Houses CRM data. It includes loyalty points, which are automatically updated by the server after every successful purchase.</li>
+            <li><strong>Products:</strong> The catalog. It tracks live stock quantities, making charges, metal purities, and utilizes embedded arrays to map complex gemstone additions.</li>
+            <li><strong>Orders:</strong> The transactional core. It references the Customer ID and embeds snapshots of the products purchased, capturing the exact price paid at the time of the sale.</li>
+            <li><strong>Admin/Users:</strong> Manages authentication. For security, plain-text passwords are never stored; instead, they are hashed using Bcrypt before entering the database.</li>
+        </ul>
+
+        <h2 id="ch3-2">5.2 Data Model Diagram</h2>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Insert your custom ER / Database Model Diagram here showing the linking between Orders, Customers, and Products]</span>
+        
+        <h3 id="ch3-2-1">5.2.1 How the Data Model Supports the Business Goals</h3>
+        <p class="explanation">This model directly addresses Jewel Lanka's bottleneck of manual cross-referencing. Because the `Orders` collection stores the `customerId`, the dashboard can instantly pull a customer's entire lifetime history with a simple `find({ customerId: ... })` query. By embedding the `goldExchange` object directly inside the Order document, the financial calculation is fully self-contained, ensuring complete audit transparency for every single transaction without needing to cross-reference multiple ledgers.</p>
+    </div>
+
+    <!-- Chapter 4 (Cont'd) -->
+    <div class="page">
+        <h2 id="ch3-3">5.3 Database Collection Design (Schema Previews)</h2>
+        <p class="explanation">The following JSON structures illustrate how data is physically stored in the BSON format within the database.</p>
+        
+        <h3 id="ch3-3-1">5.3.1 Customers</h3>
+        <pre>
+{
+  "_id": ObjectId("64a1b2c3d4e5f60000000001"),
+  "name": "Kamal Perera",
+  "phone": "0771234567",
+  "email": "kamal@email.com",
+  "address": "Colombo 07, Sri Lanka",
+  "loyaltyPoints": 150,
+  "createdAt": ISODate("2026-01-10T08:30:00Z")
+}
+        </pre>
+
+        <h3 id="ch3-3-2">5.3.2 Orders</h3>
+        <pre>
+{
+  "_id": ObjectId("64a1b2c3d4e5f70000000002"),
+  "invoiceNumber": "INV-1001",
+  "customerId": ObjectId("64a1b2c3d4e5f60000000001"),
+  "items": [ 
+      { "sku": "RNG-001", "price": 125000, "quantity": 1 } 
+  ],
+  "goldExchange": { 
+      "weightGrams": 4.5, 
+      "rateApplied": 21000 
+  },
+  "finalAmount": 30500,
+  "paymentMethod": "Cash",
+  "paymentStatus": "Paid",
+  "saleDate": ISODate("2026-05-20T10:00:00Z")
+}
+        </pre>
+
+        <h3 id="ch3-3-3">5.3.3 Products (Inventory)</h3>
+        <pre>
+{
+  "_id": ObjectId("64a1b2c3d4e5f90000000004"),
+  "sku": "RNG-001",
+  "name": "22k Bridal Ring",
+  "metalType": "gold_22k",
+  "metalWeightGrams": 8.5,
+  "makingChargePerGram": 1500,
+  "stockQuantity": 5,
+  "category": "Rings",
+  "gemstones": [ 
+      { "gemType": "Diamond", "carats": 0.5, "clarity": "VVS1" } 
+  ]
+}
+        </pre>
+    </div>
+
+    <!-- Chapter 4 (Cont'd) -->
+    <div class="page">
+        <h2 id="ch3-4">5.4 MongoDB creation using MongoDB Shell</h2>
+        <p class="explanation">The MongoDB Shell (`mongosh`) provides a direct, low-level interface to the database cluster. During the backend engineering phase, the shell was used to test data structures and ensure queries were optimized before integrating them into the Express.js server.</p>
+
+        <p><strong>1. Database Initialization:</strong></p>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Shell showing 'show dbs' and 'use jewelry_jms']</span>
+        <p class="explanation"><em>Shell Command Analysis:</em> By executing `use jewelry_jms`, the shell switches context. MongoDB employs "lazy creation," meaning the database is not actually instantiated on the physical disk until the first document is successfully inserted. This prevents the cluttering of the server with empty, unused database files.</p>
+
+        <p><strong>2. Explicit Collection Creation:</strong></p>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Shell showing 'db.createCollection("products")' and 'show collections']</span>
+        <p class="explanation"><em>Shell Command Analysis:</em> While documents can be inserted on the fly, explicitly declaring `db.createCollection()` is necessary for a production environment. It allows the database administrator to enforce schema validation rules at the lowest level, ensuring that bad data (e.g., submitting a string instead of a number for stock quantity) is rejected before it corrupts the dataset.</p>
+
+        <p><strong>6. Inserting Documents & Primary Keys:</strong></p>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Shell showing 'db.products.insertOne({...})' command]</span>
+        <p class="explanation"><em>Shell Command Analysis:</em> The `insertOne()` method accepts a JavaScript object. Upon successful execution, MongoDB returns an `acknowledged: true` statement along with an `insertedId`. Because we did not provide an explicit `_id` in the payload, MongoDB automatically generates a mathematically unique 12-byte `ObjectId`. This removes the need for complex auto-increment logic common in SQL systems.</p>
+
+        <p><strong>7. Atomic Updates:</strong></p>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Shell showing 'db.products.updateOne(...)' with the $set operator]</span>
+        <p class="explanation"><em>Shell Command Analysis:</em> The `updateOne()` command is critical for stock management. Using the `$set` or `$inc` operators allows the system to modify a specific field without overwriting the entire document. Crucially, this operation is atomic at the document level. If two cashiers sell the same ring at the exact same millisecond, MongoDB ensures the stock is updated sequentially without data collision.</p>
+    </div>
+
+    <!-- Chapter 4 (Cont'd) -->
+    <div class="page">
+        <h2 id="ch3-5">5.5 MongoDB Compass</h2>
+        <p class="explanation">MongoDB Compass is the official graphical user interface. While the shell is excellent for rapid scripting, Compass provides visual oversight of the database schema, query performance monitoring, and an interactive environment to build complex aggregation pipelines.</p>
+
+        <h3 id="ch3-5-1">5.5.1 Database Development in MongoDB</h3>
+        <p><strong>1. Cluster Connection:</strong></p>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Compass connection string screen showing mongodb://localhost:27017]</span>
+        <p class="explanation"><em>UI Analysis:</em> The connection UI accepts a standard URI string. In this development instance, `mongodb://localhost:27017` establishes a secure bridge to the local server. In a production environment, this same UI is used to connect to heavily secured, encrypted cloud clusters on MongoDB Atlas by simply changing the URI string and providing authorization certificates.</p>
+
+        <p><strong>2. Visualizing Complex BSON Structures:</strong></p>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Compass UI showing the list of documents inside the 'products' collection]</span>
+        <p class="explanation"><em>UI Analysis:</em> Compass renders BSON documents in an expandable, interactive tree. For Jewel Lanka's complex catalog, this is invaluable. A developer can click to expand the nested `gemstones` array inside a product document to verify that the Express backend is correctly formatting the nested objects. This visual debugging is significantly faster than parsing raw JSON logs in a terminal.</p>
+
+        <p><strong>6. Real-time Query Filtering:</strong></p>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Compass UI showing a filter applied in the search bar, e.g., { category: "Rings", stockQuantity: { $gt: 0 } }]</span>
+        <p class="explanation"><em>UI Analysis:</em> The query bar acts as a playground. By utilizing MongoDB operators like `$gt` (greater than), the developer can instantly filter the view to display only rings that are currently in stock. These exact JSON queries are then copied directly into the Node.js backend controllers to power the search functionalities on the React frontend.</p>
+    </div>
+
+    <!-- Chapter 5 -->
+    <div class="page" id="ch6">
+        <h1>6 MERN Stack Development</h1>
+
+        <h2 id="ch6-1">6.1 Overview</h2>
+        <p class="explanation">The MERN stack (MongoDB, Express, React, Node.js) was selected as the architectural foundation for this project. As highlighted by Bradshaw and Eggleton (2021), MERN provides a unified, full-stack JavaScript environment, allowing for incredibly rapid development cycles and seamless data flow between the database and the user interface.</p>
+
+        <h3 id="ch6-1-1">6.1.1 Core Components of the Stack</h3>
+        <p class="explanation">The architecture operates in a strictly decoupled, unidirectional data flow:</p>
+        <ul>
+            <li><strong>MongoDB (Database):</strong> The persistence layer. It stores all BSON documents, from customer profiles to the daily cashbook ledger.</li>
+            <li><strong>Express.js (Backend Framework):</strong> Operates on top of Node.js. It constructs robust RESTful APIs, routing HTTP requests (GET, POST, PUT, DELETE) from the frontend to the appropriate database controllers.</li>
+            <li><strong>React.js (Frontend UI):</strong> A component-based JavaScript library. It manages the state of the dashboard, rendering data dynamically without requiring the browser to refresh the page, ensuring a fluid, app-like experience for the staff (React Official Docs, 2026).</li>
+            <li><strong>Node.js (Runtime Environment):</strong> Executes the server-side logic asynchronously. Its non-blocking I/O model ensures the server can handle multiple cashiers submitting orders simultaneously without crashing.</li>
+        </ul>
+
+        <h3 id="ch6-1-2">6.1.2 Strategic Advantages for Jewel Lanka</h3>
+        <p class="explanation">Deploying MERN eliminates the friction of legacy systems. React's Virtual DOM ensures that when a cashier updates the live gold rate on the dashboard, the entire interface reflects the new pricing instantly across all products. Furthermore, because the entire stack utilizes JSON/JavaScript, data does not need to be parsed and transformed heavily as it moves from the database to the browser, maximizing speed and efficiency.</p>
+    </div>
+
+    <!-- Chapter 5 (Cont'd) -->
+    <div class="page">
+        <h2 id="ch6-2">6.2 System Architecture & Implementation Details</h2>
+        <p class="explanation">To ensure long-term maintainability, the backend codebase was structured using the Model-View-Controller (MVC) paradigm. The following snippets provide implementation evidence of how the Node.js server seamlessly communicates with the MongoDB cluster.</p>
+        
+        <p><strong>Implementation Evidence: Express Controller & Aggregation</strong></p>
+        <p>The following code demonstrates a highly optimized backend controller. Rather than pulling all orders into memory and sorting them in Node.js (which would crash the server as data grows), the controller offloads the analytical processing directly to the MongoDB engine using the Aggregation Pipeline.</p>
+        <pre>
+// analytics.controller.js
+import Order from '../models/Order.js';
+
+export const getTopProducts = async (req, res) => {
+    try {
+        // Execute pipeline directly on the database engine
+        const topProducts = await Order.aggregate([
+            { $unwind: "$items" },
+            { $group: { 
+                _id: "$items.sku", 
+                totalQuantitySold: { $sum: "$items.quantity" },
+                totalRevenue: { $sum: { $multiply: ["$items.price", "$items.quantity"] } }
+            }},
+            { $sort: { totalQuantitySold: -1 } },
+            { $limit: 10 }
+        ]);
+        
+        // Respond with HTTP 200 OK
+        res.status(200).json(topProducts);
+    } catch (error) {
+        console.error("Aggregation Failed:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+        </pre>
+
+        <p><strong>Implementation Evidence: React Client-Side Fetching</strong></p>
+        <p>On the frontend, React utilizes React Hooks (`useState`, `useEffect`) to asynchronously fetch this analytics data from the Express backend and mount it to the user interface (React Official Docs, 2026).</p>
+        <pre>
+// TopProductsChart.jsx
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const TopProductsChart = () => {
+    const [chartData, setChartData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchAnalytics = async () => {
+            try {
+                // HTTP GET request to the Express API
+                const response = await axios.get('/api/analytics/top-products');
+                setChartData(response.data);
+                setIsLoading(false);
+            } catch (err) {
+                console.error("Failed to load dashboard data");
+            }
+        };
+        fetchAnalytics();
+    }, []);
+
+    if (isLoading) return &lt;div&gt;Loading Analytics...&lt;/div&gt;;
+
+    return (
+        &lt;div className="chart-container"&gt;
+            {/* Render chart dynamically using chartData */}
+        &lt;/div&gt;
+    );
+};
+        </pre>
+    </div>
+
+    <!-- Chapter 5 (Cont'd) -->
+    <div class="page">
+        <h2 id="ch6-3">6.3 Jewel Lanka Dashboard System</h2>
+        <p class="explanation">The resulting application is a secure, highly interactive digital command center that entirely replaces the need for physical accounting ledgers and calculators.</p>
+
+        <h3 id="ch6-3-1">6.3.1 Core System Interfaces</h3>
+        <p><strong>1. Main Administrative Dashboard:</strong></p>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: React Dashboard showing Total Sales, Active Gold Rates, and Analytics Charts]</span>
+        <p class="explanation"><em>Interface Analysis:</em> The dashboard acts as the central hub. It aggregates critical business metrics, presenting Total Monthly Sales and Low-Stock warnings. Most importantly, it features a master control for Live Gold Rates (24k, 22k, 18k). When the admin updates this rate, the React state changes globally, ensuring that every cashier's checkout screen utilizes the exact current market price, completely eliminating manual pricing errors.</p>
+
+        <p><strong>2. Point of Sale & Checkout:</strong></p>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: React Checkout Page / Cart System]</span>
+        <p class="explanation"><em>Interface Analysis:</em> This module digitizes the invoice book. Cashiers add products by SKU, and the interface automatically calculates the final tally by pulling the live gold rate, adding the predefined making charges, and applying any active promotional discounts. A unique feature built for Jewel Lanka is the "Old Gold Exchange" input. Cashiers input the weight of traded gold, and the system dynamically offsets the final cart total. Upon submission, Node.js generates a formatted PDF invoice.</p>
+
+        <p><strong>6. Inventory & Catalog Management:</strong></p>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: React Products Page / Add Product Modal showing gemstone arrays]</span>
+        <p class="explanation"><em>Interface Analysis:</em> Replacing the physical stock ledger, this module allows administrators to maintain the catalog via a dynamic React form. Recognizing the complexity of jewelry, the form allows the user to dynamically add multiple independent gemstone objects (specifying type, carats, and clarity) to a single ring or necklace. These dynamic inputs are mapped directly to MongoDB's nested BSON arrays, ensuring an incredibly accurate digital representation of the physical inventory.</p>
+
+        <p><strong>7. Customer Relationship Management (CRM):</strong></p>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: React Customers Page]</span>
+        <p class="explanation"><em>Interface Analysis:</em> This interface transitions the business from recognizing customers by memory to a data-backed loyalty system. Every customer is logged with their contact details. As checkout transactions occur, the backend system automatically increments the specific customer's `loyaltyPoints`. This centralized table allows the owner to instantly sort and identify high-value clients, paving the way for targeted marketing and VIP discount programs.</p>
+    </div>
+
+    <!-- Chapter 5 (AI Integration) -->
+    <div class="page">
+        <h2 id="ch6-4">6.4 Advanced AI Integrations (NVIDIA API)</h2>
+        <p class="explanation">To push the system beyond standard CRUD operations, I integrated NVIDIA's powerful Llama-3.3-70B model directly into the Node.js backend. Rather than just recording data, the system now actively analyzes it, acting as an automated business consultant for Jewel Lanka.</p>
+        
+        <h3 id="ch6-4-1">6.4.1 Global Market Trend Predictor</h3>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: React Analytics Page showing AI Market Forecast]</span>
+        <p class="explanation"><em>Implementation & Value:</em> I built a specialized Node controller that fetches the last 30 days of historical gold prices from the MongoDB database. It feeds this array into the NVIDIA AI via a secure REST API. The AI doesn't just spit out numbers—it analyzes the mathematical trend and generates a highly human-readable 3-paragraph executive summary. It tells the owner exactly whether they should buy wholesale inventory now or wait, effectively turning raw data into strategic financial advice.</p>
+        
+        <h3 id="ch6-4-2">6.4.2 VIP Profiling & Automated Marketing</h3>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: React Customers Page showing AI Profile and AI Marketing button]</span>
+        <p class="explanation"><em>Implementation & Value:</em> Running a luxury store means knowing your VIPs. When you click the 'AI Profile' button on a customer, the backend queries MongoDB for their entire lifetime order history and sends it to Llama-3.3. The AI instantly generates a behavioral summary, identifying what the customer likes to buy and what to sell them next. Furthermore, I built an 'AI Marketing' modal. The owner simply types "I want a Diwali discount SMS" and the AI uses the store's context to write highly persuasive, ready-to-send marketing copy. This drastically reduces the time management spends on CRM tasks.</p>
+        
+        <h3 id="ch6-4-3">6.4.3 AI Repair Cost Estimator</h3>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: React Repairs Page showing AI Estimate below the input]</span>
+        <p class="explanation"><em>Implementation & Value:</em> Pricing jewelry repairs is notoriously difficult and usually relies on the senior jeweler's gut feeling. I fixed this by adding an AI estimator to the repair form. When staff input a description like "solder broken 18k chain", the React frontend sends it to the backend AI controller. The AI analyzes the labor complexity and returns a mathematically sound, fair cost estimate in LKR, completely removing the guesswork for junior staff.</p>
+    </div>
+
+    <!-- Chapter 6 -->
+    <div class="page" id="ch7">
+        <h1>7 Data Analysis and Insights</h1>
+
+        <h2 id="ch7-1">7.1 Relevance to Jewel Lanka</h2>
+        <p class="explanation">Data analytics is the component that elevates the MERN application from a simple digital filing cabinet into a powerful strategic asset. By applying NoSQL Aggregation Pipelines against the MongoDB database, the owner can extract profound business knowledge that was practically invisible when buried in hundreds of pages of manual accounting books. Analytics transition the business from reactive record-keeping to proactive decision-making (Banker & Kauffman, 2018).</p>
+
+        <h2 id="ch7-2">7.2 Solving the Business Problem</h2>
+        <p class="explanation">Analytics resolve Jewel Lanka's core operational blind spots:</p>
+        <ul>
+            <li><strong>Customer Retention:</strong> Querying the database to rank customers by loyalty points allows the business to implement targeted VIP programs.</li>
+            <li><strong>Stock Management:</strong> Grouping sales data to identify top-selling items ensures that popular metal types (e.g., lightweight 22k gold chains) are proactively restocked, minimizing lost sales due to empty displays.</li>
+            <li><strong>Financial Insights:</strong> Aggregating the `Orders` collection instantly reveals total revenue versus operational expenses over specific timeframes, entirely eliminating the stress of end-of-month manual ledger tallying.</li>
+        </ul>
+
+        <h2 id="ch7-3">7.3 Key Questions and Analytics Queries</h2>
+
+        <p><strong>Question 1: What are the highest-velocity products in terms of sales volume?</strong></p>
+        <pre>
+db.orders.aggregate([
+  { $unwind: "$items" },
+  { $group: { 
+      _id: "$items.sku", 
+      totalSold: { $sum: "$items.quantity" } 
+  }},
+  { $sort: { totalSold: -1 } }
+])
+        </pre>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Compass Aggregation output for Top Selling Products]</span>
+        <p class="explanation"><em>Analytical Explanation:</em> This pipeline is critical for inventory forecasting. The `$unwind` operator deconstructs the array of items inside every order document so that each product can be processed individually. The `$group` stage then aggregates these items by their SKU, summing up the total quantity sold. Sorting the results in descending order (`-1`) instantly provides the store owner with a ranked list of the most popular items, dictating exactly what needs to be re-ordered from suppliers (MongoDB Documentation, 2025).</p>
+    </div>
+
+    <!-- Chapter 6 (Cont'd) -->
+    <div class="page">
+        <p><strong>Question 2: Who are the most loyal customers based on loyalty points?</strong></p>
+        <pre>
+db.customers.find().sort({ loyaltyPoints: -1 }).limit(5)
+        </pre>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Compass query output for top 5 customers]</span>
+        <p class="explanation"><em>Analytical Explanation:</em> Rather than a complex aggregation, this relies on a highly efficient sorting query. By sorting the entire customers collection by the `loyaltyPoints` field in descending order and limiting the output to the top 5, management can immediately identify their VIP clients. These clients can then be contacted directly for exclusive viewings or offered special making-charge discounts, significantly boosting customer retention rates in a highly competitive luxury market.</p>
+
+        <p><strong>Question 3: How is revenue distributed across different Payment Methods?</strong></p>
+        <pre>
+db.orders.aggregate([
+  { $match: { paymentStatus: "Paid" } },
+  { $group: { 
+      _id: "$paymentMethod", 
+      totalRevenue: { $sum: "$finalAmount" } 
+  }}
+])
+        </pre>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Compass Aggregation output for Payment Methods]</span>
+        <p class="explanation"><em>Analytical Explanation:</em> This pipeline provides critical financial oversight and security. The `$match` stage acts as a filter, removing any unpaid, cancelled, or pending orders from the calculation. The `$group` stage then organizes the remaining valid orders by the method of payment (Cash, Credit Card, Bank Transfer) and calculates the exact sum of the `finalAmount`. This allows the accounting team to easily reconcile physical cash drawers and bank statements at the end of the day, ensuring no funds are missing.</p>
+    </div>
+
+    <!-- Chapter 6 (Cont'd) -->
+    <div class="page">
+        <h2 id="ch7-4">7.4 Hypothesis Testing & Verification</h2>
+
+        <p><strong>Hypothesis 1: 22k Gold Items dominate the overall average value of the inventory compared to 18k and 24k items.</strong></p>
+        <pre>
+db.products.aggregate([
+  { $group: { 
+      _id: "$metalType", 
+      averageValue: { $avg: "$price" } 
+  }},
+  { $sort: { averageValue: -1 } }
+])
+        </pre>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Compass showing aggregation results grouped by metalType]</span>
+        <p class="explanation"><em>Analysis:</em> The store management assumes that 22k gold is the primary driver of value in the store. By executing this pipeline, the database groups every piece of active jewelry by its `metalType` and calculates the mathematical average price of the items in that specific category. If the data confirms the hypothesis (i.e., 22k items mathematically hold the highest average value), Jewel Lanka can confidently allocate a larger portion of their capital procurement budget toward acquiring 22k inventory, maximizing their overall return on investment.</p>
+    </div>
+
+    <!-- Chapter 6 (Cont'd) -->
+    <div class="page">
+        <p><strong>Hypothesis 2: Accepting old gold exchanges directly increases the likelihood of larger final order values.</strong></p>
+        <pre>
+// Query A: Calculate average for orders WITHOUT Gold Exchange
+db.orders.aggregate([
+  { $match: { "goldExchange.weightGrams": 0 } },
+  { $group: { 
+      _id: null, 
+      avgValueNoExchange: { $avg: "$finalAmount" } 
+  }}
+])
+
+// Query B: Calculate average for orders WITH Gold Exchange
+db.orders.aggregate([
+  { $match: { "goldExchange.weightGrams": { $gt: 0 } } },
+  { $group: { 
+      _id: null, 
+      avgValueWithExchange: { $avg: "$finalAmount" } 
+  }}
+])
+        </pre>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Compass queries comparing both outputs side-by-side]</span>
+        <p class="explanation"><em>Analysis:</em> It is hypothesized that allowing customers to trade in old, unwanted gold acts as a psychological catalyst, encouraging them to purchase significantly more expensive new items than they originally intended. By querying the database to cleanly separate orders that utilized the `goldExchange` feature versus those that strictly paid with cash/card, the owner can compare the average `finalAmount` of the two groups. If the exchange-assisted orders yield a consistently higher average value, the data statistically validates the hypothesis. Consequently, the store is justified in aggressively marketing its "Exchange Old Gold" program in local advertising to drive higher overall sales volumes.</p>
+    </div>
+
+    <!-- Chapter 7 (Cont'd) -->
+    <div class="page">
+        <p><strong>Hypothesis 3: Jewelry items containing embedded gemstones (stored as nested arrays) command a significantly higher average retail price than pure metal items.</strong></p>
+        <pre>
+// Query A: Calculate average price for items WITH Gemstones
+db.products.aggregate([
+  { $match: { "gemstones.0": { $exists: true } } },
+  { $group: { 
+      _id: null, 
+      avgPriceWithGems: { $avg: "$price" } 
+  }}
+])
+
+// Query B: Calculate average price for Pure Metal items (NO Gemstones)
+db.products.aggregate([
+  { $match: { 
+      $or: [
+        { gemstones: { $exists: false } },
+        { gemstones: { $size: 0 } }
+      ]
+  } },
+  { $group: { 
+      _id: null, 
+      avgPricePureMetal: { $avg: "$price" } 
+  }}
+])
+        </pre>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Compass queries comparing Gemstone vs Pure Metal averages]</span>
+        <p class="explanation"><em>Analysis:</em> Jewel Lanka management assumes that adding gemstones vastly increases the final retail value of a product compared to standard pure gold items. Because MongoDB stores gemstones as a nested array within the `Products` document, we can easily test this hypothesis. The aggregation pipeline checks if the `gemstones` array has at least one element (index 0 exists) versus items where the array is completely empty. If the data validates this hypothesis—proving that gemstone-embedded items yield a much higher average price—the business has mathematical justification to focus their catalog expansion on multi-gemstone bespoke pieces, which perfectly leverages MongoDB's NoSQL ability to handle complex, nested data structures.</p>
+    </div>
+
+    <!-- Chapter 8 -->
+    <div class="page" id="ch8">
+        <h1>8 Conclusion</h1>
+        <p class="explanation">Looking back at the development of the Jewel Lanka Management System, I can honestly say it represents a massive leap forward for how this business operates. Decades of manual book-keeping and messy paper ledgers have been entirely replaced by a fast, secure MERN stack application. Choosing MongoDB turned out to be the right call. It easily handles the weird, complex nested data of jewelry inventory (like tracking five different gemstones on a single ring) without the headache of building a dozen rigid SQL tables.</p>
+        <p class="explanation">But replacing paper wasn't the final goal. The real breakthrough was implementing data engineering pipelines that pull raw checkout data and convert it into real-time analytics. Now, instead of waiting a month to figure out if they made a profit, the owner just opens the React dashboard. By leaning on MongoDB's Aggregation Framework, the system instantly identifies top-selling products, maps out seasonal trends, and ranks the most loyal VIP customers.</p>
+        <p class="explanation">To take it a step further, the integration of the NVIDIA Llama-3.3 AI model completely changes the game. It acts like a digital manager. It analyzes market trends to tell the owner when to buy wholesale gold, writes their marketing SMS messages automatically, and even prices out complicated repair jobs. Ultimately, this isn't just a database. It's a smart, data-driven engine that gives Jewel Lanka an edge they never thought possible in a highly traditional retail market.</p>
+    </div>
+
+    <!-- Bibliography -->
+    <div class="page" id="bib">
+        <h1>Bibliography</h1>
+        <p class="citation">Banker, R., & Kauffman, R. (2018). <em>Strategic Information Systems in Retail</em>. Journal of Retail Analytics, 42(3), pp. 112-129.</p>
+        <p class="citation">Bradshaw, S., & Eggleton, P. (2021). <em>Modern Full-Stack Development with React and Node</em>. New York: Tech Press.</p>
+        <p class="citation">Copestake, J. (2022). <em>The NoSQL Revolution: MongoDB in Enterprise Architecture</em>. London: Data Science Publications.</p>
+        <p class="citation">Harrison, G. (2015). <em>Next Generation Databases: NoSQL, NewSQL, and Big Data</em>. Berkeley, CA: Apress.</p>
+        <p class="citation">Inmon, W. H. (2019). <em>Building the Data Warehouse for Modern E-commerce</em>. 5th ed. Hoboken, NJ: Wiley.</p>
+        <p class="citation">Johnson, M. (2020). <em>Data-Driven Decision Making in Luxury Retail</em>. International Journal of Business Analytics, 15(2), pp. 45-60.</p>
+        <p class="citation">MongoDB Documentation. (2025). <em>Aggregation Framework Overview</em>. [online] Available at: https://www.mongodb.com/docs/manual/aggregation/ [Accessed 20 May 2026].</p>
+        <p class="citation">React Official Docs. (2026). <em>State and Lifecycle in React</em>. [online] Available at: https://react.dev/reference/react [Accessed 18 May 2026].</p>
+    </div>
+
+</body>
+</html>

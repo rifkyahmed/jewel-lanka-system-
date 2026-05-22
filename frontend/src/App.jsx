@@ -1,23 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  LayoutDashboard, 
-  FileText, 
-  Gem, 
-  TrendingUp, 
-  Users, 
-  Truck, 
-  Wrench, 
-  BookOpen, 
-  LogOut, 
-  Bell, 
-  Plus, 
-  Trash2, 
-  Check, 
+import {
+  LayoutDashboard,
+  FileText,
+  Gem,
+  TrendingUp,
+  Users,
+  Truck,
+  Wrench,
+  BookOpen,
+  LogOut,
+  Bell,
+  Plus,
+  Trash2,
+  Check,
   AlertCircle,
   PenTool,
-  Sparkles,
-  Bot,
-  X
+  Sparkles
 } from 'lucide-react';
 import ConfirmDialog from './components/ConfirmDialog';
 import Analytics from './components/Analytics';
@@ -31,13 +29,13 @@ import {
   validateSupplierForm,
 } from './utils/formValidation';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = '/api';
 
 function App() {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [activeTab, setActiveTab] = useState('Dashboard');
-  
+
   // Auth state
   const [loginUsername, setLoginUsername] = useState('admin');
   const [loginPassword, setLoginPassword] = useState('admin123');
@@ -85,16 +83,8 @@ function App() {
   const [customerForm, setCustomerForm] = useState({ name: '', phone: '', email: '', address: '', birthday: '', notes: '' });
   const [supplierForm, setSupplierForm] = useState({ name: '', contactPerson: '', phone: '', email: '', address: '', metalTypeSupplied: 'Gold', outstandingBalance: '' });
   const [repairForm, setRepairForm] = useState({ customerId: '', itemName: '', description: '', estimatedWeight: '', estimatedCost: '' });
-  const [isEstimatingRepair, setIsEstimatingRepair] = useState(false);
-  const [repairEstimateResult, setRepairEstimateResult] = useState('');
   const [customOrderForm, setCustomOrderForm] = useState({ customerId: '', customerName: '', itemName: '', category: 'Ring', designNotes: '', metalType: 'gold_22k', estimatedWeight: '', quotedPrice: '', advancePayment: '', paymentStatus: 'Unpaid' });
   const [isGeneratingDesc, setIsGeneratingDesc] = useState(false);
-  const [customerProfiles, setCustomerProfiles] = useState({});
-  const [isGeneratingProfile, setIsGeneratingProfile] = useState({});
-  const [showMarketingModal, setShowMarketingModal] = useState(false);
-  const [marketingPrompt, setMarketingPrompt] = useState('');
-  const [marketingResult, setMarketingResult] = useState('');
-  const [isGeneratingMarketing, setIsGeneratingMarketing] = useState(false);
   const [ledgerForm, setLedgerForm] = useState({ type: 'Expense', category: 'Salary', amount: '', description: '', paymentMethod: 'Cash' });
   const [showViewOrderModal, setShowViewOrderModal] = useState(false);
   const [viewOrder, setViewOrder] = useState(null);
@@ -165,48 +155,48 @@ function App() {
 
   function fetchUserData() {
     return (async () => {
-    try {
-      const res = await fetch(`${API_BASE}/auth/profile`, { headers: getHeaders() });
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data);
-      } else {
-        setToken('');
+      try {
+        const res = await fetch(`${API_BASE}/auth/profile`, { headers: getHeaders() });
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        } else {
+          setToken('');
+        }
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
-    }
     })();
   }
 
   function fetchAllData() {
     return (async () => {
-    try {
-      fetchDashboard();
-      fetchInventory();
-      fetchOrders();
-      fetchCustomers();
-      fetchSuppliers();
-      fetchRepairs();
-      fetchCustomOrders();
-      fetchLedger();
-    } catch (err) {
-      console.error(err);
-    }
+      try {
+        fetchDashboard();
+        fetchInventory();
+        fetchOrders();
+        fetchCustomers();
+        fetchSuppliers();
+        fetchRepairs();
+        fetchCustomOrders();
+        fetchLedger();
+      } catch (err) {
+        console.error(err);
+      }
     })();
   }
 
   function fetchDashboard() {
     return (async () => {
-    const res = await fetch(`${API_BASE}/dashboard`, { headers: getHeaders() });
-    if (res.ok) {
-      const data = await res.json();
-      setDashboard(data);
-      if (data.activeRates) {
-        setRates(data.activeRates.rates);
-        setRateForm(data.activeRates.rates);
+      const res = await fetch(`${API_BASE}/dashboard`, { headers: getHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setDashboard(data);
+        if (data.activeRates) {
+          setRates(data.activeRates.rates);
+          setRateForm(data.activeRates.rates);
+        }
       }
-    }
     })();
   }
 
@@ -373,7 +363,7 @@ function App() {
     const rate22k = Math.round(rate24k * 0.9167);
     const rate20k = Math.round(rate24k * 0.8333);
     const rate18k = Math.round(rate24k * 0.7500);
-    
+
     setRateForm({
       gold_24k: val,
       gold_22k: rate22k.toString(),
@@ -564,7 +554,6 @@ function App() {
       setShowAddRepairModal(false);
       setFormErrors(prev => ({ ...prev, repair: {} }));
       setRepairForm({ customerId: '', itemName: '', description: '', estimatedWeight: '', estimatedCost: '' });
-      setRepairEstimateResult('');
       fetchRepairs();
       fetchDashboard();
       addNotification('success', 'Repair job logged');
@@ -596,7 +585,7 @@ function App() {
     }
     const payload = { ...customOrderForm };
     if (!payload.customerId) delete payload.customerId;
-    
+
     let res;
     if (editingCustomOrderId) {
       res = await fetch(`${API_BASE}/custom-orders/${editingCustomOrderId}`, {
@@ -611,7 +600,7 @@ function App() {
         body: JSON.stringify(payload)
       });
     }
-    
+
     if (res.ok) {
       setShowAddCustomOrderModal(false);
       setEditingCustomOrderId(null);
@@ -625,32 +614,8 @@ function App() {
     }
   };
 
-  const generateRepairEstimate = async () => {
-    if(!repairForm.description) {
-      addNotification('error', 'Please enter a repair description first.');
-      return;
-    }
-    setIsEstimatingRepair(true);
-    try {
-      const res = await fetch(`${API_BASE}/ai/estimate-repair`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify({ description: repairForm.description, estimatedWeight: repairForm.estimatedWeight })
-      });
-      if(res.ok) {
-        const data = await res.json();
-        setRepairEstimateResult(data.estimate);
-      } else {
-        addNotification('error', 'Failed to generate repair estimate');
-      }
-    } catch(err) {
-      addNotification('error', 'Network error generating estimate');
-    }
-    setIsEstimatingRepair(false);
-  };
-
   const generateAIDescription = async () => {
-    if(!customOrderForm.itemName) {
+    if (!customOrderForm.itemName) {
       addNotification('error', 'Please enter an Item Name first to generate a description.');
       return;
     }
@@ -662,14 +627,14 @@ function App() {
         headers: getHeaders(),
         body: JSON.stringify({ prompt: promptText })
       });
-      if(res.ok) {
+      if (res.ok) {
         const data = await res.json();
         setCustomOrderForm(prev => ({ ...prev, designNotes: data.description }));
         addNotification('success', 'AI Description generated successfully!');
       } else {
         addNotification('error', 'Failed to generate AI description');
       }
-    } catch(err) {
+    } catch (err) {
       addNotification('error', 'Network error generating AI description');
     }
     setIsGeneratingDesc(false);
@@ -777,52 +742,6 @@ function App() {
         addNotification('error', 'Failed to delete product');
       }
     });
-  };
-
-  const generateCustomerProfile = async (cust) => {
-    setIsGeneratingProfile(prev => ({ ...prev, [cust._id]: true }));
-    try {
-      const customerOrders = orders.filter(o => o.customerId?._id === cust._id);
-      const res = await fetch(`${API_BASE}/ai/customer-profile`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify({ customerData: cust, orderHistory: customerOrders })
-      });
-      if(res.ok) {
-        const data = await res.json();
-        setCustomerProfiles(prev => ({ ...prev, [cust._id]: data.profile }));
-        addNotification('success', 'Customer Profile Generated');
-      } else {
-        addNotification('error', 'Failed to generate profile');
-      }
-    } catch(err) {
-      addNotification('error', 'Network error');
-    }
-    setIsGeneratingProfile(prev => ({ ...prev, [cust._id]: false }));
-  };
-  const generateMarketingCampaign = async () => {
-    if (!marketingPrompt) {
-      addNotification('error', 'Please enter a prompt for the campaign.');
-      return;
-    }
-    setIsGeneratingMarketing(true);
-    try {
-      const res = await fetch(`${API_BASE}/ai/marketing-campaign`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify({ prompt: marketingPrompt })
-      });
-      if(res.ok) {
-        const data = await res.json();
-        setMarketingResult(data.campaign);
-        addNotification('success', 'Marketing Campaign Generated');
-      } else {
-        addNotification('error', 'Failed to generate campaign');
-      }
-    } catch(err) {
-      addNotification('error', 'Network error');
-    }
-    setIsGeneratingMarketing(false);
   };
 
   const handleDeleteCustomer = async (id) => {
@@ -1005,22 +924,22 @@ function App() {
           )}
           <div className="form-group">
             <label>Username</label>
-            <input 
-              type="text" 
-              value={loginUsername} 
-              onChange={(e) => setLoginUsername(e.target.value)} 
+            <input
+              type="text"
+              value={loginUsername}
+              onChange={(e) => setLoginUsername(e.target.value)}
               placeholder="e.g. admin"
-              required 
+              required
             />
           </div>
           <div className="form-group">
             <label>Password</label>
-            <input 
-              type="password" 
-              value={loginPassword} 
-              onChange={(e) => setLoginPassword(e.target.value)} 
+            <input
+              type="password"
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
               placeholder="••••••••"
-              required 
+              required
             />
           </div>
           <button type="submit" className="btn-primary">Access Dashboard</button>
@@ -1045,13 +964,13 @@ function App() {
     const width = 1200;
     const height = 300;
     const maxVal = Math.max(...dashboard.rollingSales.map(s => s.revenue), 1000);
-    
+
     const gridLines = [];
     const numLines = 5;
     for (let i = 0; i <= numLines; i++) {
-        const y = Math.round(height - 40 - (i / numLines) * (height - 60));
-        const val = Math.round((i / numLines) * maxVal);
-        gridLines.push({ y, val });
+      const y = Math.round(height - 40 - (i / numLines) * (height - 60));
+      const val = Math.round((i / numLines) * maxVal);
+      gridLines.push({ y, val });
     }
 
     const points = dashboard.rollingSales.map((s, idx) => {
@@ -1060,22 +979,22 @@ function App() {
       const dayNum = s.date.split(' ')[1] || s.date;
       return { x, y, date: dayNum, revenue: s.revenue };
     });
-    
+
     const pathD = `M ${points[0].x} ${points[0].y} ` + points.slice(1).map(p => `L ${p.x} ${p.y}`).join(' ');
     const areaD = `${pathD} L ${points[points.length - 1].x} ${height - 40} L ${points[0].x} ${height - 40} Z`;
-    
+
     return (
       <div className="svg-chart-container" style={{ position: 'relative', width: '100%', marginTop: '10px' }}>
         <svg viewBox={`0 0 ${width} ${height}`} width="100%" height="100%" style={{ overflow: 'visible' }}>
-          
+
           {/* Grid Lines */}
           {gridLines.map((line, i) => (
-             <g key={`grid-${i}`}>
-                <line x1="40" y1={line.y} x2={width} y2={line.y} stroke="#f1f2f3" strokeWidth="1" />
-                <text x="30" y={line.y + 4} textAnchor="end" fill="#9ca3af" fontSize="12" fontFamily="inherit">
-                   Rs.{Math.round(line.val/1000)}k
-                </text>
-             </g>
+            <g key={`grid-${i}`}>
+              <line x1="40" y1={line.y} x2={width} y2={line.y} stroke="#f1f2f3" strokeWidth="1" />
+              <text x="30" y={line.y + 4} textAnchor="end" fill="#9ca3af" fontSize="12" fontFamily="inherit">
+                Rs.{Math.round(line.val / 1000)}k
+              </text>
+            </g>
           ))}
 
           <path d={areaD} fill="rgba(45, 83, 69, 0.08)" stroke="none" />
@@ -1088,7 +1007,7 @@ function App() {
               </text>
               {p.revenue > 0 && (
                 <text x={p.x} y={p.y - 12} textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontWeight="bold">
-                  Rs.{Math.round(p.revenue/1000)}k
+                  Rs.{Math.round(p.revenue / 1000)}k
                 </text>
               )}
             </g>
@@ -1105,13 +1024,13 @@ function App() {
     const width = 1200;
     const height = 300;
     const maxVal = Math.max(...dashboard.yearlySales.map(s => s.revenue), 1000);
-    
+
     const gridLines = [];
     const numLines = 5;
     for (let i = 0; i <= numLines; i++) {
-        const y = Math.round(height - 40 - (i / numLines) * (height - 60));
-        const val = Math.round((i / numLines) * maxVal);
-        gridLines.push({ y, val });
+      const y = Math.round(height - 40 - (i / numLines) * (height - 60));
+      const val = Math.round((i / numLines) * maxVal);
+      gridLines.push({ y, val });
     }
 
     const points = dashboard.yearlySales.map((s, idx) => {
@@ -1119,22 +1038,22 @@ function App() {
       const y = Math.round(height - 40 - (s.revenue / maxVal) * (height - 60));
       return { x, y, month: s.month, revenue: s.revenue };
     });
-    
+
     const pathD = `M ${points[0].x} ${points[0].y} ` + points.slice(1).map(p => `L ${p.x} ${p.y}`).join(' ');
     const areaD = `${pathD} L ${points[points.length - 1].x} ${height - 40} L ${points[0].x} ${height - 40} Z`;
-    
+
     return (
       <div className="svg-chart-container" style={{ position: 'relative', width: '100%', marginTop: '10px' }}>
         <svg viewBox={`0 0 ${width} ${height}`} width="100%" height="100%" style={{ overflow: 'visible' }}>
-          
+
           {/* Grid Lines */}
           {gridLines.map((line, i) => (
-             <g key={`grid-${i}`}>
-                <line x1="40" y1={line.y} x2={width} y2={line.y} stroke="#f1f2f3" strokeWidth="1" />
-                <text x="30" y={line.y + 4} textAnchor="end" fill="#9ca3af" fontSize="12" fontFamily="inherit">
-                   Rs.{Math.round(line.val/1000)}k
-                </text>
-             </g>
+            <g key={`grid-${i}`}>
+              <line x1="40" y1={line.y} x2={width} y2={line.y} stroke="#f1f2f3" strokeWidth="1" />
+              <text x="30" y={line.y + 4} textAnchor="end" fill="#9ca3af" fontSize="12" fontFamily="inherit">
+                Rs.{Math.round(line.val / 1000)}k
+              </text>
+            </g>
           ))}
 
           <path d={areaD} fill="rgba(212, 175, 55, 0.08)" stroke="none" />
@@ -1385,7 +1304,7 @@ function App() {
 
         {/* SCROLLABLE VIEW PORT */}
         <div className="view-port">
-          
+
           {/* ======================================= */}
           {/* TAB 1: DASHBOARD VIEW                   */}
           {/* ======================================= */}
@@ -1499,7 +1418,7 @@ function App() {
 
               {/* LEFT MAIN COLUMN */}
               <div className="dashboard-main-col" style={{ gap: '24px' }}>
-                
+
                 {/* ATTENTION NEEDED PANEL REMOVED AS REQUESTED */}
                 {/* SECONDARY MINI KPIS GRID (moved to span full width) */}
 
@@ -1541,7 +1460,7 @@ function App() {
                         const pct = Math.round((d.revenue / maxVal) * 100);
                         return (
                           <div key={idx} className="horizontal-bar-row">
-                            <span className="horizontal-bar-label" style={{ fontSize: '0.75rem', width: '35px' }}>{d.day.substring(0,3)}</span>
+                            <span className="horizontal-bar-label" style={{ fontSize: '0.75rem', width: '35px' }}>{d.day.substring(0, 3)}</span>
                             <div className="horizontal-bar-bg" style={{ height: '10px' }}>
                               <div className="horizontal-bar-fill" style={{ width: `${pct || 0}%`, backgroundColor: 'var(--color-gold)', borderRadius: '5px' }}></div>
                             </div>
@@ -1610,7 +1529,7 @@ function App() {
                     <tbody>
                       {dashboard.recentOrders?.map((o, idx) => (
                         <tr key={idx}>
-                          <td>{new Date(o.saleDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}</td>
+                          <td>{new Date(o.saleDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</td>
                           <td><strong>{o.invoiceNumber}</strong></td>
                           <td>{o.customerId?.name || 'Walk-in Customer'}</td>
                           <td><strong>Rs. {o.finalAmount.toLocaleString()}</strong></td>
@@ -1663,7 +1582,7 @@ function App() {
                           <span className="activity-title" style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>{cust.name}</span>
                           <span className="activity-time" style={{ fontSize: '0.75rem' }}>{cust.ordersCount} orders</span>
                         </div>
-                        <span className="activity-meta" style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-accent)' }}>Rs.{Math.round(cust.totalSpent/1000)}k</span>
+                        <span className="activity-meta" style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-accent)' }}>Rs.{Math.round(cust.totalSpent / 1000)}k</span>
                       </div>
                     ))}
                   </div>
@@ -1741,7 +1660,7 @@ function App() {
                     <div key={idx} className="cart-item">
                       <div className="cart-item-info">
                         <h4>{p.name}</h4>
-                        <p>{p.sku} | {p.metalWeightGrams}g ({p.metalType.replace('gold_','').toUpperCase()})</p>
+                        <p>{p.sku} | {p.metalWeightGrams}g ({p.metalType.replace('gold_', '').toUpperCase()})</p>
                       </div>
                       <span className="cart-item-price">Rs.{p.pricing?.total?.toLocaleString()}</span>
                     </div>
@@ -1767,19 +1686,19 @@ function App() {
                   <div className="grid-2">
                     <div className="form-group">
                       <label>Old Gold Weight (g)</label>
-                      <input 
-                        type="number" 
-                        value={checkoutGoldExchange.weightGrams} 
-                        onChange={(e) => setCheckoutGoldExchange({ ...checkoutGoldExchange, weightGrams: e.target.value })} 
+                      <input
+                        type="number"
+                        value={checkoutGoldExchange.weightGrams}
+                        onChange={(e) => setCheckoutGoldExchange({ ...checkoutGoldExchange, weightGrams: e.target.value })}
                         placeholder="e.g. 4.5"
                       />
                     </div>
                     <div className="form-group">
                       <label>Exchange Rate (Rs/g)</label>
-                      <input 
-                        type="number" 
-                        value={checkoutGoldExchange.rateApplied} 
-                        onChange={(e) => setCheckoutGoldExchange({ ...checkoutGoldExchange, rateApplied: e.target.value })} 
+                      <input
+                        type="number"
+                        value={checkoutGoldExchange.rateApplied}
+                        onChange={(e) => setCheckoutGoldExchange({ ...checkoutGoldExchange, rateApplied: e.target.value })}
                         placeholder="e.g. 8000"
                       />
                     </div>
@@ -1789,19 +1708,19 @@ function App() {
                   <div className="grid-2">
                     <div className="form-group">
                       <label>Discount Amount (Rs.)</label>
-                      <input 
-                        type="number" 
-                        value={checkoutDiscount} 
-                        onChange={(e) => setCheckoutDiscount(e.target.value)} 
+                      <input
+                        type="number"
+                        value={checkoutDiscount}
+                        onChange={(e) => setCheckoutDiscount(e.target.value)}
                         placeholder="e.g. 1500"
                       />
                     </div>
                     <div className="form-group">
                       <label>Tax Charges (Rs.)</label>
-                      <input 
-                        type="number" 
-                        value={checkoutTax} 
-                        onChange={(e) => setCheckoutTax(e.target.value)} 
+                      <input
+                        type="number"
+                        value={checkoutTax}
+                        onChange={(e) => setCheckoutTax(e.target.value)}
                         placeholder="e.g. 450"
                       />
                     </div>
@@ -1903,7 +1822,7 @@ function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredOrders.slice((ordersPage-1)*ORDERS_PER_PAGE, ordersPage*ORDERS_PER_PAGE).map((o) => (
+                    {filteredOrders.slice((ordersPage - 1) * ORDERS_PER_PAGE, ordersPage * ORDERS_PER_PAGE).map((o) => (
                       <tr key={o._id}>
                         <td>{new Date(o.saleDate).toLocaleDateString()}</td>
                         <td><strong>{o.invoiceNumber}</strong></td>
@@ -1935,11 +1854,11 @@ function App() {
                 <div>
                   {filteredOrders.length === 0
                     ? 'No orders match the current filters'
-                    : `Showing ${(ordersPage-1)*ORDERS_PER_PAGE + 1} - ${Math.min(ordersPage*ORDERS_PER_PAGE, filteredOrders.length)} of ${filteredOrders.length}`}
+                    : `Showing ${(ordersPage - 1) * ORDERS_PER_PAGE + 1} - ${Math.min(ordersPage * ORDERS_PER_PAGE, filteredOrders.length)} of ${filteredOrders.length}`}
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <button className="btn-secondary" onClick={() => setOrdersPage(Math.max(1, ordersPage-1))}>Prev</button>
-                  <button className="btn-secondary" onClick={() => setOrdersPage(Math.min(Math.ceil(filteredOrders.length/ORDERS_PER_PAGE), ordersPage+1))}>Next</button>
+                  <button className="btn-secondary" onClick={() => setOrdersPage(Math.max(1, ordersPage - 1))}>Prev</button>
+                  <button className="btn-secondary" onClick={() => setOrdersPage(Math.min(Math.ceil(filteredOrders.length / ORDERS_PER_PAGE), ordersPage + 1))}>Next</button>
                 </div>
               </div>
             </div>
@@ -1994,8 +1913,8 @@ function App() {
                       <th>Stock</th>
                       <th>Gem Details</th>
                       <th>Selling Price</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                      <th>Status</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -2004,7 +1923,7 @@ function App() {
                         <td><strong>{prod.sku}</strong></td>
                         <td>{prod.name}</td>
                         <td>{prod.category}</td>
-                        <td>{prod.metalType.replace('gold_','').toUpperCase()} ({prod.metalWeightGrams}g)</td>
+                        <td>{prod.metalType.replace('gold_', '').toUpperCase()} ({prod.metalWeightGrams}g)</td>
                         <td><strong>{getEffectiveStockQuantity(prod)}</strong></td>
                         <td>
                           {prod.gemstones && prod.gemstones.length > 0 ? (
@@ -2030,7 +1949,7 @@ function App() {
                         </td>
                         <td>
                           <div style={{ display: 'flex', gap: 8 }}>
-                            {hasRole('Admin','Inventory_Manager') && (
+                            {hasRole('Admin', 'Inventory_Manager') && (
                               <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => { setEditingProductId(prod._id); setFormErrors(prev => ({ ...prev, product: {} })); setNewProduct({ sku: prod.sku, name: prod.name, category: prod.category, metalType: prod.metalType, metalWeightGrams: prod.metalWeightGrams, makingChargePerGram: prod.makingChargePerGram, makingChargeFixed: prod.makingChargeFixed, stockQuantity: getEffectiveStockQuantity(prod), gems: prod.gemstones || [], tempGem: { gemType: 'Diamond', carats: '', cut: 'Round', clarity: 'VVS1', cost: '' }, specifications: prod.specifications || {}, supplierId: prod.supplierId?._id || prod.supplierId || '' }); setShowAddProductModal(true); }}>Edit</button>
                             )}
                             {hasRole('Admin') && (
@@ -2038,7 +1957,7 @@ function App() {
                             )}
                           </div>
                         </td>
-                        </tr>
+                      </tr>
                     ))}
                   </tbody>
                 </table>
@@ -2055,14 +1974,9 @@ function App() {
             <div>
               <div className="module-header">
                 <h3>Customer Directory</h3>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button className="btn-primary" style={{ background: 'var(--color-gold)', color: '#000', border: 'none', display: 'flex', alignItems: 'center', gap: '5px' }} onClick={() => setShowMarketingModal(true)}>
-                    <Bot size={16} /> AI Marketing
-                  </button>
-                  <button className="btn-action" onClick={() => setShowAddCustomerModal(true)}>
-                    <Plus size={16} /> Register Customer
-                  </button>
-                </div>
+                <button className="btn-action" onClick={() => setShowAddCustomerModal(true)}>
+                  <Plus size={16} /> Register Customer
+                </button>
               </div>
 
               <div className="table-card">
@@ -2075,7 +1989,7 @@ function App() {
                       <th>Address</th>
                       <th>Birthday</th>
                       <th>Loyalty Points</th>
-                        <th>Actions</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -2091,28 +2005,15 @@ function App() {
                             ⭐ {cust.loyaltyPoints} pts
                           </span>
                         </td>
-                          <td>
-                            <div style={{ display: 'flex', gap: 8 }}>
-                              <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => { setEditingCustomerId(cust._id); setCustomerForm({ name: cust.name, phone: cust.phone, email: cust.email || '', address: cust.address || '', birthday: cust.birthday || '', notes: cust.notes || '' }); setShowAddCustomerModal(true); }}>Edit</button>
-                              <button 
-                                className="btn-primary" 
-                                style={{ padding: '4px 8px', fontSize: '0.75rem', background: 'var(--color-gold)', color: '#000', border: 'none' }} 
-                                onClick={() => generateCustomerProfile(cust)}
-                                disabled={isGeneratingProfile[cust._id]}
-                              >
-                                {isGeneratingProfile[cust._id] ? 'Profiling...' : <><Bot size={12} style={{marginRight:4}}/>AI Profile</>}
-                              </button>
-                              {hasRole('Admin') && (
-                                <button className="btn-danger" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleDeleteCustomer(cust._id)}><Trash2 size={12} /></button>
-                              )}
-                            </div>
-                            {customerProfiles[cust._id] && (
-                              <div style={{ marginTop: '8px', padding: '10px', background: '#f8fafc', borderLeft: '3px solid var(--color-gold)', fontSize: '0.8rem', whiteSpace: 'pre-wrap' }}>
-                                <strong>AI Summary:</strong><br/>
-                                {customerProfiles[cust._id]}
-                              </div>
+                        <td>
+                          <th>Stock</th>
+                          <div style={{ display: 'flex', gap: 8 }}>
+                            <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => { setEditingCustomerId(cust._id); setCustomerForm({ name: cust.name, phone: cust.phone, email: cust.email || '', address: cust.address || '', birthday: cust.birthday || '', notes: cust.notes || '' }); setShowAddCustomerModal(true); }}>Edit</button>
+                            {hasRole('Admin') && (
+                              <button className="btn-danger" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleDeleteCustomer(cust._id)}><Trash2 size={12} /></button>
                             )}
-                          </td>
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -2143,7 +2044,7 @@ function App() {
                       <th>Email</th>
                       <th>Material Supplied</th>
                       <th>Outstanding Balance</th>
-                        <th>Actions</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -2163,16 +2064,16 @@ function App() {
                             Rs. {supp.outstandingBalance.toLocaleString()}
                           </strong>
                         </td>
-                          <td>
-                            <div style={{ display: 'flex', gap: 8 }}>
-                              {hasRole('Admin','Inventory_Manager') && (
-                                <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => { setEditingSupplierId(supp._id); setSupplierForm({ name: supp.name, contactPerson: supp.contactPerson || '', phone: supp.phone || '', email: supp.email || '', address: supp.address || '', metalTypeSupplied: supp.metalTypeSupplied?.[0] || 'Gold', outstandingBalance: supp.outstandingBalance || '' }); setShowAddSupplierModal(true); }}>Edit</button>
-                              )}
-                              {hasRole('Admin') && (
-                                <button className="btn-danger" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleDeleteSupplier(supp._id)}><Trash2 size={12} /></button>
-                              )}
-                            </div>
-                          </td>
+                        <td>
+                          <div style={{ display: 'flex', gap: 8 }}>
+                            {hasRole('Admin', 'Inventory_Manager') && (
+                              <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => { setEditingSupplierId(supp._id); setSupplierForm({ name: supp.name, contactPerson: supp.contactPerson || '', phone: supp.phone || '', email: supp.email || '', address: supp.address || '', metalTypeSupplied: supp.metalTypeSupplied?.[0] || 'Gold', outstandingBalance: supp.outstandingBalance || '' }); setShowAddSupplierModal(true); }}>Edit</button>
+                            )}
+                            {hasRole('Admin') && (
+                              <button className="btn-danger" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleDeleteSupplier(supp._id)}><Trash2 size={12} /></button>
+                            )}
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -2222,7 +2123,7 @@ function App() {
                           </span>
                         </td>
                         <td>
-                          {hasRole('Admin','Cashier','Sales_Staff') && rep.status !== 'Delivered' && (
+                          {hasRole('Admin', 'Cashier', 'Sales_Staff') && rep.status !== 'Delivered' && (
                             <button className="btn-action" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleCompleteRepair(rep._id)}>
                               <Check size={12} /> Deliver & Collect Cash
                             </button>
@@ -2270,7 +2171,7 @@ function App() {
                       <th>Amount</th>
                       <th>Description</th>
                       <th>Reference ID</th>
-                        <th>Actions</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -2290,11 +2191,11 @@ function App() {
                         </td>
                         <td>{ent.description}</td>
                         <td>{ent.referenceId || '-'}</td>
-                          <td>
-                            {hasRole('Admin') && (
-                              <button className="btn-danger" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleDeleteLedger(ent._id)}><Trash2 size={12} /></button>
-                            )}
-                          </td>
+                        <td>
+                          {hasRole('Admin') && (
+                            <button className="btn-danger" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleDeleteLedger(ent._id)}><Trash2 size={12} /></button>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -2317,89 +2218,89 @@ function App() {
             const coProfit = coCollectedRev * 0.20;
 
             return (
-            <div>
-              <div className="kpi-row" style={{ marginBottom: 20 }}>
-                <div className="kpi-card border-accent">
-                  <span className="kpi-label">Collected Revenue</span>
-                  <span className="kpi-value">Rs. {coCollectedRev.toLocaleString()}</span>
-                  <span className="kpi-trend">Paid & Partial</span>
+              <div>
+                <div className="kpi-row" style={{ marginBottom: 20 }}>
+                  <div className="kpi-card border-accent">
+                    <span className="kpi-label">Collected Revenue</span>
+                    <span className="kpi-value">Rs. {coCollectedRev.toLocaleString()}</span>
+                    <span className="kpi-trend">Paid & Partial</span>
+                  </div>
+                  <div className="kpi-card border-gold">
+                    <span className="kpi-label">Estimated Profit</span>
+                    <span className="kpi-value">Rs. {coProfit.toLocaleString()}</span>
+                    <span className="kpi-trend">Based on collected</span>
+                  </div>
+                  <div className="kpi-card border-danger">
+                    <span className="kpi-label">Pending Payments</span>
+                    <span className="kpi-value">Rs. {coPendingPayment.toLocaleString()}</span>
+                    <span className="kpi-trend">Unpaid & Balances</span>
+                  </div>
                 </div>
-                <div className="kpi-card border-gold">
-                  <span className="kpi-label">Estimated Profit</span>
-                  <span className="kpi-value">Rs. {coProfit.toLocaleString()}</span>
-                  <span className="kpi-trend">Based on collected</span>
+                <div className="module-header">
+                  <h3>Custom Orders Management</h3>
+                  <button className="btn-action" onClick={() => {
+                    setEditingCustomOrderId(null);
+                    setCustomOrderForm({ customerId: '', customerName: '', itemName: '', category: 'Ring', designNotes: '', metalType: 'gold_22k', estimatedWeight: '', quotedPrice: '', advancePayment: '', paymentStatus: 'Unpaid' });
+                    setShowAddCustomOrderModal(true);
+                  }}>+ New Custom Order</button>
                 </div>
-                <div className="kpi-card border-danger">
-                  <span className="kpi-label">Pending Payments</span>
-                  <span className="kpi-value">Rs. {coPendingPayment.toLocaleString()}</span>
-                  <span className="kpi-trend">Unpaid & Balances</span>
-                </div>
-              </div>
-              <div className="module-header">
-                <h3>Custom Orders Management</h3>
-                <button className="btn-action" onClick={() => {
-                  setEditingCustomOrderId(null);
-                  setCustomOrderForm({ customerId: '', customerName: '', itemName: '', category: 'Ring', designNotes: '', metalType: 'gold_22k', estimatedWeight: '', quotedPrice: '', advancePayment: '', paymentStatus: 'Unpaid' });
-                  setShowAddCustomOrderModal(true);
-                }}>+ New Custom Order</button>
-              </div>
-              <div className="table-card">
-                <table className="custom-table">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Customer</th>
-                      <th>Item</th>
-                      <th>Category</th>
-                      <th>Metal</th>
-                      <th>Quoted Price</th>
-                      <th>Advance</th>
-                      <th>Payment</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {customOrders.map((co) => (
-                      <tr key={co._id}>
-                        <td>{new Date(co.createdAt).toLocaleDateString()}</td>
-                        <td>{co.customerId?.name || co.customerName || 'Anonymous'}</td>
-                        <td><strong>{co.itemName}</strong></td>
-                        <td>{co.category}</td>
-                        <td>{co.metalType.replace('gold_','').toUpperCase()}</td>
-                        <td>Rs. {co.quotedPrice?.toLocaleString()}</td>
-                        <td>Rs. {co.advancePayment?.toLocaleString()}</td>
-                        <td>
-                          <span className={`status-tag ${co.paymentStatus === 'Paid' ? 'active' : (co.paymentStatus === 'Partial' ? 'warning' : 'danger')}`} style={{ fontSize: '0.7rem', padding: '2px 6px' }}>
-                            {co.paymentStatus === 'Paid' ? 'Fully Paid' : (co.paymentStatus === 'Partial' ? 'Partial' : 'Unpaid')}
-                          </span>
-                        </td>
-                        <td><span className={`status-tag ${co.status === 'Delivered' ? 'active' : 'warning'}`}>{co.status}</span></td>
-                        <td>
-                          <div style={{ display: 'flex', gap: 6 }}>
-                            {co.status !== 'Delivered' ? (
-                              <>
-                                <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleEditCustomOrder(co)}><PenTool size={12}/></button>
-                                <button className="btn-primary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => openConfirmDialog('Confirm Delivery & Payment', 'Has the full payment been collected for this custom order? Marking as delivered will record this in the revenue.', () => handleCompleteCustomOrder(co._id), 'Confirm Delivery', 'success')}><Check size={12} style={{marginRight:4}}/>Deliver</button>
-                                <button className="btn-danger" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleDeleteCustomOrder(co._id)}><Trash2 size={12}/></button>
-                              </>
-                            ) : (
-                              <>
-                                <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => downloadCustomOrderPDF(co._id)}>Invoice PDF</button>
-                                <button className="btn-danger" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleDeleteCustomOrder(co._id)}><Trash2 size={12}/></button>
-                              </>
-                            )}
-                          </div>
-                        </td>
+                <div className="table-card">
+                  <table className="custom-table">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Item</th>
+                        <th>Category</th>
+                        <th>Metal</th>
+                        <th>Quoted Price</th>
+                        <th>Advance</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                       </tr>
-                    ))}
-                    {customOrders.length === 0 && (
-                      <tr><td colSpan="9" style={{ textAlign: 'center', padding: '20px' }}>No custom orders found.</td></tr>
-                    )}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {customOrders.map((co) => (
+                        <tr key={co._id}>
+                          <td>{new Date(co.createdAt).toLocaleDateString()}</td>
+                          <td>{co.customerId?.name || co.customerName || 'Anonymous'}</td>
+                          <td><strong>{co.itemName}</strong></td>
+                          <td>{co.category}</td>
+                          <td>{co.metalType.replace('gold_', '').toUpperCase()}</td>
+                          <td>Rs. {co.quotedPrice?.toLocaleString()}</td>
+                          <td>Rs. {co.advancePayment?.toLocaleString()}</td>
+                          <td>
+                            <span className={`status-tag ${co.paymentStatus === 'Paid' ? 'active' : (co.paymentStatus === 'Partial' ? 'warning' : 'danger')}`} style={{ fontSize: '0.7rem', padding: '2px 6px' }}>
+                              {co.paymentStatus === 'Paid' ? 'Fully Paid' : (co.paymentStatus === 'Partial' ? 'Partial' : 'Unpaid')}
+                            </span>
+                          </td>
+                          <td><span className={`status-tag ${co.status === 'Delivered' ? 'active' : 'warning'}`}>{co.status}</span></td>
+                          <td>
+                            <div style={{ display: 'flex', gap: 6 }}>
+                              {co.status !== 'Delivered' ? (
+                                <>
+                                  <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleEditCustomOrder(co)}><PenTool size={12} /></button>
+                                  <button className="btn-primary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => openConfirmDialog('Confirm Delivery & Payment', 'Has the full payment been collected for this custom order? Marking as delivered will record this in the revenue.', () => handleCompleteCustomOrder(co._id), 'Confirm Delivery', 'success')}><Check size={12} style={{ marginRight: 4 }} />Deliver</button>
+                                  <button className="btn-danger" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleDeleteCustomOrder(co._id)}><Trash2 size={12} /></button>
+                                </>
+                              ) : (
+                                <>
+                                  <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => downloadCustomOrderPDF(co._id)}>Invoice PDF</button>
+                                  <button className="btn-danger" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleDeleteCustomOrder(co._id)}><Trash2 size={12} /></button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                      {customOrders.length === 0 && (
+                        <tr><td colSpan="9" style={{ textAlign: 'center', padding: '20px' }}>No custom orders found.</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
             );
           })()}
 
@@ -2623,7 +2524,7 @@ function App() {
           <div className="modal-content">
             <div className="modal-header">
               <h3>Log Repair Service Ticket</h3>
-              <button className="btn-secondary" style={{ padding: 4 }} onClick={() => { setShowAddRepairModal(false); setFormErrors(prev => ({ ...prev, repair: {} })); setRepairEstimateResult(''); }}>✕</button>
+              <button className="btn-secondary" style={{ padding: 4 }} onClick={() => { setShowAddRepairModal(false); setFormErrors(prev => ({ ...prev, repair: {} })); }}>✕</button>
             </div>
             <form onSubmit={handleAddRepair} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div className="form-group">
@@ -2650,34 +2551,13 @@ function App() {
                   <input type="number" step="0.01" value={repairForm.estimatedWeight} onChange={(e) => setRepairForm({ ...repairForm, estimatedWeight: e.target.value })} placeholder="e.g. 5.6" />
                 </div>
                 <div className="form-group">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                    <label style={{ margin: 0 }}>Service Cost Quote (Rs.)</label>
-                    <button 
-                      type="button" 
-                      onClick={generateRepairEstimate}
-                      disabled={isEstimatingRepair}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: '5px',
-                        background: 'var(--color-gold)', color: '#000',
-                        border: 'none', padding: '4px 8px', borderRadius: '4px',
-                        fontSize: '0.75rem', fontWeight: 600, cursor: isEstimatingRepair ? 'not-allowed' : 'pointer'
-                      }}
-                    >
-                      <Sparkles size={12} /> {isEstimatingRepair ? 'Estimating...' : 'AI Estimate'}
-                    </button>
-                  </div>
+                  <label>Service Cost Quote (Rs.)</label>
                   <input type="number" value={repairForm.estimatedCost} onChange={(e) => setRepairForm({ ...repairForm, estimatedCost: e.target.value })} placeholder="e.g. 2500" required aria-invalid={!!formErrors.repair?.estimatedCost} />
                   {formErrors.repair?.estimatedCost && <div className="field-error">{formErrors.repair.estimatedCost}</div>}
-                  {repairEstimateResult && (
-                    <div style={{ marginTop: '8px', padding: '10px', background: '#f8fafc', borderLeft: '4px solid var(--color-gold)', fontSize: '0.8rem', whiteSpace: 'pre-wrap' }}>
-                      <strong>AI Suggestion:</strong><br/>
-                      {repairEstimateResult}
-                    </div>
-                  )}
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn-secondary" onClick={() => { setShowAddRepairModal(false); setFormErrors(prev => ({ ...prev, repair: {} })); setRepairEstimateResult(''); }}>Cancel</button>
+                <button type="button" className="btn-secondary" onClick={() => { setShowAddRepairModal(false); setFormErrors(prev => ({ ...prev, repair: {} })); }}>Cancel</button>
                 <button type="submit" className="btn-primary">Generate Job Ticket</button>
               </div>
             </form>
@@ -2727,8 +2607,8 @@ function App() {
               <div className="form-group">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
                   <label style={{ margin: 0 }}>Design Notes & Description</label>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={generateAIDescription}
                     disabled={isGeneratingDesc}
                     style={{
@@ -2901,7 +2781,7 @@ function App() {
                     <tr key={i}>
                       <td><strong>{it.sku}</strong></td>
                       <td>{it.name}</td>
-                      <td>{it.metalType.replace('gold_','').toUpperCase()}</td>
+                      <td>{it.metalType.replace('gold_', '').toUpperCase()}</td>
                       <td>{it.metalWeightGrams} g</td>
                       <td>Rs. {it.subtotal.toLocaleString()}</td>
                     </tr>
@@ -2916,7 +2796,7 @@ function App() {
                   </div>
                 </div>
                 <div className="table-card" style={{ padding: 18, background: '#fbf8ef' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.92rem' }}><span>Subtotal</span><strong>Rs. {viewOrder.items.reduce((s,a)=>s+(a.subtotal||0),0).toLocaleString()}</strong></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.92rem' }}><span>Subtotal</span><strong>Rs. {viewOrder.items.reduce((s, a) => s + (a.subtotal || 0), 0).toLocaleString()}</strong></div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.92rem', marginTop: 8 }}><span>Discount</span><strong>Rs. {viewOrder.discountAmount?.toLocaleString() || 0}</strong></div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.92rem', marginTop: 8 }}><span>Tax</span><strong>Rs. {viewOrder.taxAmount?.toLocaleString() || 0}</strong></div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.92rem', marginTop: 8 }}><span>Balance Due</span><strong>Rs. {(viewOrder.balanceDue || 0).toLocaleString()}</strong></div>
@@ -2928,51 +2808,6 @@ function App() {
               <button className="btn-secondary" onClick={() => setShowViewOrderModal(false)}>Close</button>
               <button type="button" className="btn-secondary" onClick={() => downloadInvoicePDF(viewOrder.invoiceNumber)}>Download PDF</button>
               <button type="button" className="btn-primary" onClick={() => downloadInvoicePDF(viewOrder.invoiceNumber)}>Print Invoice</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showMarketingModal && (
-        <div className="modal-overlay" onClick={() => setShowMarketingModal(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
-            <div className="modal-header">
-              <h2><Bot size={20} style={{marginRight: 8, color: 'var(--color-gold)'}} /> AI Marketing Campaign Generator</h2>
-              <button className="close-btn" onClick={() => setShowMarketingModal(false)}><X size={20} /></button>
-            </div>
-            <div className="modal-body">
-              <div className="form-group">
-                <label>What kind of campaign do you want to run?</label>
-                <textarea 
-                  value={marketingPrompt} 
-                  onChange={e => setMarketingPrompt(e.target.value)} 
-                  placeholder="E.g., Write an SMS to our VIP customers offering 10% off making charges for the upcoming Diwali festival."
-                  rows={3}
-                ></textarea>
-              </div>
-              <button 
-                className="btn-primary" 
-                style={{ width: '100%', marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}
-                onClick={generateMarketingCampaign}
-                disabled={isGeneratingMarketing}
-              >
-                {isGeneratingMarketing ? 'Generating...' : <><Sparkles size={16} /> Generate Campaign</>}
-              </button>
-              
-              {marketingResult && (
-                <div className="form-group">
-                  <label>Generated Campaign:</label>
-                  <textarea 
-                    value={marketingResult} 
-                    onChange={e => setMarketingResult(e.target.value)} 
-                    rows={8} 
-                    style={{ background: '#f8fafc', borderLeft: '4px solid var(--color-gold)' }}
-                  ></textarea>
-                </div>
-              )}
-            </div>
-            <div className="modal-footer">
-              <button className="btn-secondary" onClick={() => setShowMarketingModal(false)}>Close</button>
             </div>
           </div>
         </div>

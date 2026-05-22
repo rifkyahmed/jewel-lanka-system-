@@ -29,11 +29,14 @@ app.use('/api/custom-orders', require('./routes/customOrderRoutes'));
 app.use('/api/cashbook', require('./routes/cashbookRoutes'));
 app.use('/api/audit-logs', require('./routes/auditLogRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
-app.use('/api/ai', require('./routes/aiRoutes'));
+// app.use('/api/ai', require('./routes/aiRoutes'));
 
-// Basic health check route
-app.get('/', (req, res) => {
-    res.send('Decision Analytics Jewelry JMS API is running...');
+const path = require('path');
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
 });
 
 // Error handling middleware

@@ -289,6 +289,7 @@
                             <li><a href="#ch6-4-3">6.4.3 AI Repair Cost Estimator</a></li>
                         </ul>
                     </li>
+                    <li><a href="#ch6-5">6.5 Version Control and Deployment (GitHub)</a></li>
                 </ul>
             </li>
             <li><a href="#ch7">7. Data Analysis and Insights</a>
@@ -794,9 +795,13 @@ const TopProductsChart = () => {
         <h3 id="ch6-4-3">6.4.3 AI Repair Cost Estimator</h3>
         <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: React Repairs Page showing AI Estimate below the input]</span>
         <p class="explanation"><em>Implementation & Value:</em> Pricing jewelry repairs is notoriously difficult and usually relies on the senior jeweler's gut feeling. I fixed this by adding an AI estimator to the repair form. When staff input a description like "solder broken 18k chain", the React frontend sends it to the backend AI controller. The AI analyzes the labor complexity and returns a mathematically sound, fair cost estimate in LKR, completely removing the guesswork for junior staff.</p>
+
+        <h2 id="ch6-5">6.5 Version Control and Deployment (GitHub)</h2>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Your GitHub repository showing the project files and commit history]</span>
+        <p class="explanation"><em>Implementation & Value:</em> Developing a full-stack MERN application requires strict code management to prevent data loss and track changes. For this project, I utilized Git for version control and successfully pushed the entire local codebase to a remote GitHub repository. To protect sensitive information, I created a `.gitignore` file to ensure the `node_modules` folders (which contain thousands of dependencies) and the `.env` file (which holds the highly sensitive NVIDIA API Key and MongoDB URI) were excluded from the public commit. This demonstrates industry-standard practices in securely managing and deploying full-stack Node.js environments.</p>
     </div>
 
-    <!-- Chapter 6 -->
+    <!-- Chapter 7 -->
     <div class="page" id="ch7">
         <h1>7 Data Analysis and Insights</h1>
 

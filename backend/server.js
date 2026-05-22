@@ -6,6 +6,11 @@ const connectDB = require('./config/db');
 // Load environment variables
 dotenv.config();
 
+// Vercel Fallbacks (in case env variables were missed during setup)
+process.env.MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://norcosgaming_db_user:JewelLanka123@cluster0.bw5ss5o.mongodb.net/jewelry_jms?appName=Cluster0';
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'haralusso_jewel_secret_key_998877';
+process.env.NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || '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';
+
 // Connect to MongoDB Database (skip during tests)
 if (process.env.NODE_ENV !== 'test') {
     connectDB();

@@ -29,7 +29,8 @@ import {
   validateSupplierForm,
 } from './utils/formValidation';
 
-const API_BASE = '/api';
+// If testing locally, use: const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://jewel-lanka-system.vercel.app/api';
 
 function App() {
   const [user, setUser] = useState(null);

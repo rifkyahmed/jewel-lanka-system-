@@ -290,6 +290,7 @@
                         </ul>
                     </li>
                     <li><a href="#ch6-5">6.5 Version Control and Deployment (GitHub)</a></li>
+                    <li><a href="#ch6-6">6.6 Cloud Deployment and Database Migration</a></li>
                 </ul>
             </li>
             <li><a href="#ch7">7. Data Analysis and Insights</a>
@@ -799,6 +800,10 @@ const TopProductsChart = () => {
         <h2 id="ch6-5">6.5 Version Control and Deployment (GitHub)</h2>
         <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Your GitHub repository showing the project files and commit history]</span>
         <p class="explanation"><em>Implementation & Value:</em> Developing a full-stack MERN application requires strict code management to prevent data loss and track changes. For this project, I utilized Git for version control and successfully pushed the entire local codebase to a remote GitHub repository. To protect sensitive information, I created a `.gitignore` file to ensure the `node_modules` folders (which contain thousands of dependencies) and the `.env` file (which holds the highly sensitive NVIDIA API Key and MongoDB URI) were excluded from the public commit. This demonstrates industry-standard practices in securely managing and deploying full-stack Node.js environments.</p>
+
+        <h2 id="ch6-6">6.6 Cloud Deployment and Database Migration</h2>
+        <span class="screenshot-placeholder">[REPLACE WITH SCREENSHOT: Hostinger deployment dashboard or MongoDB Atlas interface]</span>
+        <p class="explanation"><em>Implementation & Value:</em> To transition the application from a local development environment into a production-ready state, I successfully migrated the entire architecture to the cloud. First, I exported the local MongoDB `jewelry_jms` database using MongoDB Compass and imported the full dataset into a secure, managed cluster on **MongoDB Atlas**. This ensures the data is backed up automatically, highly available, and protected by enterprise-grade security. Next, I utilized **Hostinger Cloud Startup** to deploy the full MERN application. By configuring a custom `postinstall` script in the root `package.json`, Hostinger's continuous deployment pipeline automatically pulls the latest code from GitHub, installs both backend and frontend dependencies, builds the optimized React `dist` folder, and starts the Node.js server to serve the entire application from a single, unified domain. This robust deployment architecture allows Jewel Lanka management to securely access their AI-powered dashboard from any device, anywhere in the world.</p>
     </div>
 
     <!-- Chapter 7 -->
